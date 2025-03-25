@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bybpqf880sl1t"]
+[gd_scene load_steps=25 format=3 uid="uid://bybpqf880sl1t"]
 
 [ext_resource type="Script" uid="uid://ts62aa2lgsgi" path="res://code/look_at.gd" id="1_abbf7"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="1_eo7j0"]
@@ -8,6 +8,8 @@
 [ext_resource type="FontFile" uid="uid://bunrpttlprt1h" path="res://fonts/Bytesized-Regular.ttf" id="3_jqqo2"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="4_b0etf"]
 [ext_resource type="Material" uid="uid://ceg4rycg7v8my" path="res://shaders/glow_test.tres" id="5_m018v"]
+[ext_resource type="Texture2D" uid="uid://upubd74c4mwh" path="res://textures/fennecs-logo.png" id="9_04yed"]
+[ext_resource type="Texture2D" uid="uid://dql5pwql80ldp" path="res://textures/jamandswoon-logo.png" id="10_1kcea"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_m018v"]
 material = ExtResource("5_m018v")
@@ -73,7 +75,7 @@ shader_parameter/vignette_color = Color(0.246314, 0.275395, 0.327805, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_jqqo2"]
 font = ExtResource("3_jqqo2")
-font_size = 144
+font_size = 96
 font_color = Color(0.246314, 0.275395, 0.327805, 1)
 
 [node name="Node3D" type="Node3D"]
@@ -115,7 +117,6 @@ multimesh = SubResource("MultiMesh_eus8d")
 
 [node name="Entities" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0596279)
-visible = false
 script = ExtResource("3_eus8d")
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="Entities"]
@@ -934,7 +935,6 @@ skeleton = NodePath("../..")
 
 [node name="Label3D2" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0815907, 1.14185, -1.35353)
-visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "all cubes are
 beautiful"
@@ -944,7 +944,6 @@ outline_size = 2
 
 [node name="Label3D3" type="Label3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.81841, 0.0418497, -4.05353)
-visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "so distribution should undo excess
 and each man have enough."
@@ -971,6 +970,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="."]
+visible = false
 offset_left = 157.0
 offset_top = 130.0
 offset_right = 1381.0
@@ -979,6 +979,7 @@ text = "fear not the dark"
 label_settings = SubResource("LabelSettings_jqqo2")
 
 [node name="Label2" type="Label" parent="."]
+visible = false
 offset_left = 626.0
 offset_top = 605.0
 offset_right = 1562.0
@@ -986,3 +987,67 @@ offset_bottom = 785.0
 text = "fear the fade"
 label_settings = SubResource("LabelSettings_jqqo2")
 horizontal_alignment = 2
+
+[node name="Label3" type="Label" parent="."]
+visible = false
+offset_left = 53.0
+offset_top = 294.0
+offset_right = 1493.0
+offset_bottom = 570.0
+text = "Grausamkeit empört.
+Dummheit entmutigt."
+label_settings = SubResource("LabelSettings_jqqo2")
+horizontal_alignment = 2
+
+[node name="Label4" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0.556863)
+offset_left = 71.0
+offset_top = 247.0
+offset_right = 1511.0
+offset_bottom = 523.0
+text = "schweigen kann die 
+Grausamste lüge sein"
+label_settings = SubResource("LabelSettings_jqqo2")
+
+[node name="Label5" type="Label" parent="."]
+offset_left = 71.0
+offset_top = 247.0
+offset_right = 1511.0
+offset_bottom = 523.0
+text = "
+Grau"
+label_settings = SubResource("LabelSettings_jqqo2")
+
+[node name="Fennecs-logo" type="TextureRect" parent="."]
+visible = false
+modulate = Color(0.246314, 0.275395, 0.327805, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -512.0
+offset_right = 512.0
+offset_bottom = 512.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_04yed")
+stretch_mode = 3
+
+[node name="Jamandswoon-logo" type="TextureRect" parent="."]
+visible = false
+modulate = Color(0.246314, 0.275395, 0.327805, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -512.0
+offset_right = 512.0
+offset_bottom = 512.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_1kcea")
+stretch_mode = 3
