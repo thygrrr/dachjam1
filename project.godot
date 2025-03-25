@@ -1,0 +1,40 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="dachjam"
+run/main_scene="uid://bybpqf880sl1t"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=800
+window/size/initial_position_type=3
+window/size/extend_to_title=true
+
+[dotnet]
+
+project/assembly_name="dachjam"
+
+[rendering]
+
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=3
+global_illumination/voxel_gi/quality=1
+environment/ssil/quality=4
+environment/ssil/blur_passes=6
+anti_aliasing/screen_space_roughness_limiter/enabled=false
+global_illumination/sdfgi/probe_ray_count=4
+anti_aliasing/quality/use_taa=true
+anti_aliasing/quality/use_debanding=true
+environment/defaults/default_environment="uid://dnwg1c50c6neh"
