@@ -1,11 +1,22 @@
-[gd_scene load_steps=20 format=3 uid="uid://bybpqf880sl1t"]
+[gd_scene load_steps=23 format=3 uid="uid://bybpqf880sl1t"]
 
 [ext_resource type="Script" uid="uid://ts62aa2lgsgi" path="res://code/look_at.gd" id="1_abbf7"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="1_eo7j0"]
 [ext_resource type="BoxMesh" uid="uid://b51dma78unuwa" path="res://environment/mat_gold.tres" id="1_vf5mu"]
 [ext_resource type="Environment" uid="uid://dnwg1c50c6neh" path="res://environment/env_world.tres" id="1_vpl8t"]
+[ext_resource type="Script" uid="uid://ba55b7f4cg6mn" path="res://code/ECS.cs" id="3_eus8d"]
 [ext_resource type="FontFile" uid="uid://bunrpttlprt1h" path="res://fonts/Bytesized-Regular.ttf" id="3_jqqo2"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="4_b0etf"]
+[ext_resource type="Material" uid="uid://ceg4rycg7v8my" path="res://shaders/glow_test.tres" id="5_m018v"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_m018v"]
+material = ExtResource("5_m018v")
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="MultiMesh" id="MultiMesh_eus8d"]
+transform_format = 1
+use_colors = true
+mesh = SubResource("BoxMesh_m018v")
 
 [sub_resource type="BoxMesh" id="BoxMesh_vf5mu"]
 material = ExtResource("1_eo7j0")
@@ -31,14 +42,8 @@ emission_energy_multiplier = 7.0
 material = SubResource("StandardMaterial3D_abbf7")
 size = Vector3(0.2, 0.2, 0.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vf5mu"]
-albedo_color = Color(0.392157, 0.431373, 0.501961, 1)
-emission_enabled = true
-emission = Color(0.835294, 0.486275, 0.0313726, 1)
-emission_energy_multiplier = 5.0
-
 [sub_resource type="BoxMesh" id="BoxMesh_jqqo2"]
-material = SubResource("StandardMaterial3D_vf5mu")
+material = ExtResource("5_m018v")
 size = Vector3(0.2, 0.2, 0.2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vpl8t"]
@@ -68,8 +73,8 @@ shader_parameter/vignette_color = Color(0.246314, 0.275395, 0.327805, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_jqqo2"]
 font = ExtResource("3_jqqo2")
-font_size = 72
-font_color = Color(0.392157, 0.431373, 0.501961, 1)
+font_size = 144
+font_color = Color(0.246314, 0.275395, 0.327805, 1)
 
 [node name="Node3D" type="Node3D"]
 
@@ -105,8 +110,13 @@ light_energy = 0.2
 light_negative = true
 light_specular = 3.0
 
+[node name="Cubes" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MultiMesh_eus8d")
+
 [node name="Entities" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0596279)
+visible = false
+script = ExtResource("3_eus8d")
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="Entities"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -2)
@@ -484,7 +494,7 @@ mesh = SubResource("BoxMesh_jqqo2")
 skeleton = NodePath("../..")
 
 [node name="red" type="MeshInstance3D" parent="Entities"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4388, 1.90735e-06, -1.0402)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25693, -0.0180473, 1.84957)
 mesh = SubResource("BoxMesh_abbf7")
 skeleton = NodePath("../..")
 
@@ -924,6 +934,7 @@ skeleton = NodePath("../..")
 
 [node name="Label3D2" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0815907, 1.14185, -1.35353)
+visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "all cubes are
 beautiful"
@@ -933,6 +944,7 @@ outline_size = 2
 
 [node name="Label3D3" type="Label3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.81841, 0.0418497, -4.05353)
+visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "so distribution should undo excess
 and each man have enough."
@@ -942,6 +954,7 @@ outline_size = 2
 
 [node name="Label3D6" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.91841, 0.54185, 5.94647)
+visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "I can't understand why people are afraid of new ideas.
 I'm frightened of the old ones."
@@ -958,20 +971,18 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="."]
-visible = false
-offset_left = 34.0
-offset_top = 568.0
-offset_right = 1078.0
-offset_bottom = 658.0
+offset_left = 157.0
+offset_top = 130.0
+offset_right = 1381.0
+offset_bottom = 310.0
 text = "fear not the dark"
 label_settings = SubResource("LabelSettings_jqqo2")
 
 [node name="Label2" type="Label" parent="."]
-visible = false
-offset_left = 254.0
-offset_top = 681.0
-offset_right = 907.0
-offset_bottom = 771.0
+offset_left = 626.0
+offset_top = 605.0
+offset_right = 1562.0
+offset_bottom = 785.0
 text = "fear the fade"
 label_settings = SubResource("LabelSettings_jqqo2")
 horizontal_alignment = 2
