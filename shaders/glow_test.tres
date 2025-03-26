@@ -5,4 +5,4 @@ render_priority = -6
 albedo_color = Color(0.392157, 0.431373, 0.501961, 1)
 emission_enabled = true
 emission = Color(0.837501, 0.484983, 0, 1)
-emission_energy_multiplier = 0.0
+emission_energy_multiplier = 10.0
