@@ -22,7 +22,7 @@ shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
 shader_parameter/specular = 0.5
 shader_parameter/metallic = 0.0
 shader_parameter/emission = Color(0.837501, 0.484983, 0, 1)
-shader_parameter/emission_energy = 10.0
+shader_parameter/emission_energy = 5.0
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
 shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
@@ -30,7 +30,7 @@ shader_parameter/uv2_offset = Vector3(0, 0, 0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_m018v"]
 material = SubResource("ShaderMaterial_1kcea")
-size = Vector3(0.07, 0.1, 0.07)
+size = Vector3(0.05, 0.125, 0.05)
 
 [sub_resource type="MultiMesh" id="MultiMesh_eus8d"]
 transform_format = 1

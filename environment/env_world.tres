@@ -1,8 +1,9 @@
 [gd_resource type="Environment" format=3 uid="uid://dnwg1c50c6neh"]
 
 [resource]
-ambient_light_source = 1
-ambient_light_color = Color(0.246314, 0.275395, 0.327805, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.392157, 0.431373, 0.501961, 1)
+ambient_light_energy = 0.5
 tonemap_mode = 2
 ssil_enabled = true
 ssil_intensity = 5.0
@@ -20,5 +21,6 @@ glow_strength = 0.8
 glow_bloom = 0.2
 glow_hdr_threshold = 0.7
 volumetric_fog_enabled = true
+volumetric_fog_density = 0.1
 volumetric_fog_albedo = Color(0.246314, 0.275395, 0.327805, 1)
 volumetric_fog_emission = Color(0.246314, 0.275395, 0.327805, 1)
