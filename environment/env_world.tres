@@ -1,12 +1,12 @@
 [gd_resource type="Environment" format=3 uid="uid://dnwg1c50c6neh"]
 
 [resource]
-background_energy_multiplier = 0.0
-ambient_light_color = Color(0.392157, 0.431373, 0.501961, 1)
+ambient_light_source = 1
+ambient_light_color = Color(0.246314, 0.275395, 0.327805, 1)
 tonemap_mode = 2
 ssil_enabled = true
 ssil_intensity = 5.0
-ssil_sharpness = 0.86
+ssil_sharpness = 0.8
 ssil_normal_rejection = 0.5
 sdfgi_use_occlusion = true
 sdfgi_read_sky_light = false
@@ -21,6 +21,5 @@ glow_bloom = 0.2
 glow_blend_mode = 1
 glow_hdr_threshold = 0.3
 volumetric_fog_enabled = true
-volumetric_fog_density = 1.0
 volumetric_fog_albedo = Color(0.246314, 0.275395, 0.327805, 1)
 volumetric_fog_emission = Color(0.246314, 0.275395, 0.327805, 1)

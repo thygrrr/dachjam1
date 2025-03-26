@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bybpqf880sl1t"]
+[gd_scene load_steps=26 format=3 uid="uid://bybpqf880sl1t"]
 
 [ext_resource type="Script" uid="uid://ts62aa2lgsgi" path="res://code/look_at.gd" id="1_abbf7"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="1_eo7j0"]
@@ -7,17 +7,17 @@
 [ext_resource type="Script" uid="uid://ba55b7f4cg6mn" path="res://code/ECS.cs" id="3_eus8d"]
 [ext_resource type="FontFile" uid="uid://bunrpttlprt1h" path="res://fonts/Bytesized-Regular.ttf" id="3_jqqo2"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="4_b0etf"]
+[ext_resource type="Script" uid="uid://bwu0jl140ggaq" path="res://Cubes.cs" id="5_1sv7k"]
 [ext_resource type="Material" uid="uid://ceg4rycg7v8my" path="res://shaders/glow_test.tres" id="5_m018v"]
 [ext_resource type="Texture2D" uid="uid://upubd74c4mwh" path="res://textures/fennecs-logo.png" id="9_04yed"]
 [ext_resource type="Texture2D" uid="uid://dql5pwql80ldp" path="res://textures/jamandswoon-logo.png" id="10_1kcea"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_m018v"]
 material = ExtResource("5_m018v")
-size = Vector3(0.2, 0.2, 0.2)
+size = Vector3(0.1, 0.1, 0.1)
 
 [sub_resource type="MultiMesh" id="MultiMesh_eus8d"]
 transform_format = 1
-use_colors = true
 mesh = SubResource("BoxMesh_m018v")
 
 [sub_resource type="BoxMesh" id="BoxMesh_vf5mu"]
@@ -98,6 +98,44 @@ far = 500.0
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("1_vpl8t")
 
+[node name="ECS" type="Node" parent="."]
+script = ExtResource("3_eus8d")
+
+[node name="Cubes" type="MultiMeshInstance3D" parent="ECS"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+multimesh = SubResource("MultiMesh_eus8d")
+script = ExtResource("5_1sv7k")
+
+[node name="graffiti" type="Node3D" parent="."]
+
+[node name="Label3D2" type="Label3D" parent="graffiti"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0815907, 1.14185, -1.35353)
+modulate = Color(0.392157, 0.431373, 0.501961, 1)
+text = "all cubes are
+beautiful"
+font = ExtResource("3_jqqo2")
+font_size = 64
+outline_size = 2
+
+[node name="Label3D3" type="Label3D" parent="graffiti"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.81841, 0.0418497, -4.05353)
+modulate = Color(0.392157, 0.431373, 0.501961, 1)
+text = "so distribution should undo excess
+and each man have enough."
+font = ExtResource("3_jqqo2")
+font_size = 64
+outline_size = 2
+
+[node name="Label3D6" type="Label3D" parent="graffiti"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.91841, 0.54185, 5.94647)
+visible = false
+modulate = Color(0.392157, 0.431373, 0.501961, 1)
+text = "I can't understand why people are afraid of new ideas.
+I'm frightened of the old ones."
+font = ExtResource("3_jqqo2")
+font_size = 64
+outline_size = 2
+
 [node name="FillLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.612373, -0.5, -0.612372, 0.353553, 0.866025, -0.353553, 0.707107, 1.29807e-07, 0.707107, 0, 0, 5)
 light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
@@ -112,12 +150,9 @@ light_energy = 0.2
 light_negative = true
 light_specular = 3.0
 
-[node name="Cubes" type="MultiMeshInstance3D" parent="."]
-multimesh = SubResource("MultiMesh_eus8d")
-
 [node name="Entities" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0596279)
-script = ExtResource("3_eus8d")
+visible = false
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="Entities"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -2)
@@ -495,7 +530,7 @@ mesh = SubResource("BoxMesh_jqqo2")
 skeleton = NodePath("../..")
 
 [node name="red" type="MeshInstance3D" parent="Entities"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25693, -0.0180473, 1.84957)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25693, 1.98195, 2.84957)
 mesh = SubResource("BoxMesh_abbf7")
 skeleton = NodePath("../..")
 
@@ -933,34 +968,6 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 9.3571
 mesh = SubResource("BoxMesh_eo7j0")
 skeleton = NodePath("../..")
 
-[node name="Label3D2" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0815907, 1.14185, -1.35353)
-modulate = Color(0.392157, 0.431373, 0.501961, 1)
-text = "all cubes are
-beautiful"
-font = ExtResource("3_jqqo2")
-font_size = 64
-outline_size = 2
-
-[node name="Label3D3" type="Label3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.81841, 0.0418497, -4.05353)
-modulate = Color(0.392157, 0.431373, 0.501961, 1)
-text = "so distribution should undo excess
-and each man have enough."
-font = ExtResource("3_jqqo2")
-font_size = 64
-outline_size = 2
-
-[node name="Label3D6" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.91841, 0.54185, 5.94647)
-visible = false
-modulate = Color(0.392157, 0.431373, 0.501961, 1)
-text = "I can't understand why people are afraid of new ideas.
-I'm frightened of the old ones."
-font = ExtResource("3_jqqo2")
-font_size = 64
-outline_size = 2
-
 [node name="Vignette" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_vpl8t")
 anchors_preset = 15
@@ -999,21 +1006,23 @@ Dummheit entmutigt."
 label_settings = SubResource("LabelSettings_jqqo2")
 horizontal_alignment = 2
 
-[node name="Label4" type="Label" parent="."]
-modulate = Color(1, 1, 1, 0.556863)
-offset_left = 71.0
-offset_top = 247.0
-offset_right = 1511.0
-offset_bottom = 523.0
+[node name="quote-full" type="Label" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.27451)
+offset_left = 414.0
+offset_top = 365.0
+offset_right = 1854.0
+offset_bottom = 641.0
 text = "schweigen kann die 
 Grausamste lüge sein"
 label_settings = SubResource("LabelSettings_jqqo2")
 
-[node name="Label5" type="Label" parent="."]
-offset_left = 71.0
-offset_top = 247.0
-offset_right = 1511.0
-offset_bottom = 523.0
+[node name="quote-grau" type="Label" parent="."]
+visible = false
+offset_left = 414.0
+offset_top = 365.0
+offset_right = 1854.0
+offset_bottom = 641.0
 text = "
 Grau"
 label_settings = SubResource("LabelSettings_jqqo2")
