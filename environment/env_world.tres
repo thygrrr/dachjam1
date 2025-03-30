@@ -21,6 +21,5 @@ glow_strength = 0.8
 glow_bloom = 0.2
 glow_hdr_threshold = 0.7
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.1
 volumetric_fog_albedo = Color(0.246314, 0.275395, 0.327805, 1)
 volumetric_fog_emission = Color(0.246314, 0.275395, 0.327805, 1)

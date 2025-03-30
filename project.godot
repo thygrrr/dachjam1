@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="0x#aaaaaa"
+config/name="[grau.exe]"
 run/main_scene="uid://bybpqf880sl1t"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"

@@ -90,7 +90,7 @@ public struct Matrix4X3Custom
     public float M22;
     public float M23;
 
-    public float Custom0;
+    public float Emission;
     public float Custom1;
     public float Custom2;
     public float Custom3;

@@ -21,44 +21,51 @@ public partial class Cubes : MultiMeshInstance3D
     {
         Frequency = 0.125f,
     };
-    
-    private const int Count = 10000;
+
+    private int _count;
+    private const int PerTileCount = 50;
     
     private readonly Random _random = new();
+    private EntitySpawner _spawner;
+    private Stream<Index> _indexer;
+
     public override void _Ready()
     {
         base._Ready();
-        Multimesh.InstanceCount = Count;
-        Multimesh.VisibleInstanceCount = Count;
+        Multimesh.InstanceCount = 0;
+        Multimesh.VisibleInstanceCount = 0;
         _cubes = World.Query<Matrix4X3Custom, Index, Tile, Cubes>(default, default, default, Link.With(this)).Has<Cube>().Stream();
+        _indexer = World.Query<Index>().Has<Cube>().Has(Link.With(this)).Stream();
 
-        using var spawner = World.Entity()
+        _spawner = World.Entity()
             .Add<Cube>()
             .Add<Matrix4X3Custom>()
-            .Add<Index>()
             .Add<Tile>()
-            .Add(Link.With(this))
-            .Spawn(Count);
-        
-        var i = 0;
-        _cubes.For((ref Matrix4X3Custom matrix, ref Index index, ref Tile tile) =>
-        {
-            matrix = new(new(_random.NextSingle() * 5, 0, _random.NextSingle() * 5))
-            {
-                Custom0 = Random.Shared.NextSingle(),
-            };
+            .Add<Index>()
+            .Add(Link.With(this));
+    }
 
-            index = new(i++);
-            var j = i/50;
-            tile = new(j%10, j/30);
-        });
+    public void PopulateTile(Vector3I tile)
+    {
+        _spawner.Add(new Tile(tile.X, tile.Z));
+        _spawner.Spawn(PerTileCount);
+        
+        _count += PerTileCount;
+        Multimesh.InstanceCount = _count;
+        Multimesh.VisibleInstanceCount = _count;
+    }
+    
+    public void BuildIndex()
+    {
+        var i = 0;
+        _indexer.For((ref Index index) => index.Value = i++);
     }
     
     public override void _Process(double delta)
     {
-        var dt = (float) delta;
-        
         base._Process(delta);
+
+        var dt = (float) delta;
         _timeAccumulator += dt;
         
         _cubes.Job(
@@ -74,12 +81,12 @@ public partial class Cubes : MultiMeshInstance3D
             var pos = new Vector3(tile.X , brownianY, tile.Z) + new Vector3(brownianX, 0, brownianZ);
             matrix = new(pos)
             {
-                Custom0 = Mathf.Sin(uniform.time + index.Value) + 1.0f,
+                Emission = 0, //Mathf.Sin(uniform.time + index.Value) + 1.0f,
             };
         });
         
         _cubes.Raw(
-            uniform: (Multimesh.GetRid(), Count * Matrix4X3Custom.SizeInFloats),
+            uniform: (Multimesh.GetRid(), _count * Matrix4X3Custom.SizeInFloats),
             action: static ((Rid mesh, int count) uniform, Memory<Matrix4X3Custom> transforms) =>
             {
                 var floatSpan = MemoryMarshal.Cast<Matrix4X3Custom, float>(transforms.Span);
