@@ -1,6 +1,6 @@
 [gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bpr50gc8rlreu"]
 
-[ext_resource type="FontFile" uid="uid://7vsrqr4wvgtr" path="res://fonts/razterhunch.regular.ttf" id="1_lkkli"]
+[ext_resource type="FontFile" uid="uid://dm668hyyjb8u5" path="res://fonts/Oranssi hohde.ttf" id="1_lkkli"]
 
 [resource]
 font = ExtResource("1_lkkli")
