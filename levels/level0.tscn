@@ -1,18 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://sektlfvpvrp0"]
+[gd_scene load_steps=2 format=3 uid="uid://sektlfvpvrp0"]
 
 [ext_resource type="MeshLibrary" uid="uid://bndms4kmx7nx0" path="res://prefabs/cubes.tres" id="1_h6fn6"]
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_h6fn6"]
-
-[node name="Level" type="StaticBody3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("WorldBoundaryShape3D_h6fn6")
-
-[node name="GridMap" type="GridMap" parent="."]
+[node name="GridMap" type="GridMap"]
 mesh_library = ExtResource("1_h6fn6")
 cell_size = Vector3(1, 1, 1)
+cell_center_x = false
 cell_center_y = false
+cell_center_z = false
 data = {
 "cells": PackedInt32Array(0, 0, 4, 0, 1, 4, 0, 2, 4, 0, 3, 4, 0, 4, 4, 0, 6, 0, 1, 0, 4, 1, 6, 4, 2, 0, 4, 2, 2, 0, 2, 3, 0, 2, 4, 0, 2, 6, 4, 3, 0, 4, 3, 2, 0, 3, 3, 0, 3, 4, 0, 3, 6, 4, 4, 0, 4, 4, 2, 0, 4, 3, 0, 4, 4, 0, 4, 6, 4, 5, 0, 4, 5, 6, 4, 6, 0, 4, 6, 1, 4, 6, 2, 4, 6, 3, 4, 6, 4, 4, 6, 5, 4, 6, 6, 4, 0, 5, 4)
 }

@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace jam.code;
+namespace jam;
 
 public static class GodotNotStupidExtensions
 {
@@ -12,16 +12,5 @@ public static class GodotNotStupidExtensions
         return (rayOrigin, rayDirection);
     }
     
-    public static bool IntersectsRay(this Plane self, Vector3 origin, Vector3 direction, out Vector3 intersection)
-    {
-        var intersect = self.IntersectsRay(origin, direction);
-        if (intersect.HasValue)
-        {
-            intersection = intersect.Value;
-            return true;
-        }
-
-        intersection = default;
-        return false;
-    }
+    public static Vector3? IntersectsRay(this Plane self, (Vector3 origin, Vector3 direction) ray) => self.IntersectsRay(ray.origin, ray.direction);
 }

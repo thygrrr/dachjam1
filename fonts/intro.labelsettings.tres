@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bpr50gc8rlreu"]
+
+[ext_resource type="FontFile" uid="uid://7vsrqr4wvgtr" path="res://fonts/razterhunch.regular.ttf" id="1_lkkli"]
+
+[resource]
+font = ExtResource("1_lkkli")
+font_size = 160
+font_color = Color(0.246314, 0.275395, 0.327805, 1)

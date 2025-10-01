@@ -1,7 +1,7 @@
 using fennecs;
 using Godot;
 
-namespace jam.code;
+namespace jam;
 
 public partial class ECS : Node
 {
