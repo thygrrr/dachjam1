@@ -16,6 +16,10 @@ public static class CitizenMotion
     private const float VortexRadius = 0.25f;
     private const float Spin = 2.5f;
     private const int Strands = 3;
+    private const float StartleRate = 2.5f;
+    private const float FlinchDistance = 0.2f;
+    private const float FlinchHop = 0.12f;
+    private const float WaveSpeed = 6f;
 
     // Helix turns per cell. Must be whole, so the helix continues seamlessly into the next cell.
     private const int Twist = 1;
@@ -69,6 +73,27 @@ public static class CitizenMotion
         var lone = openStart * openEnd;
         scale = float.Lerp(helixScale, 1, lone);
         return Vector3.Lerp(helix, vortex, lone);
+    }
+
+    /// <summary>
+    ///     Fades the startle and returns the flinch offset: away and up, peaking halfway through.
+    /// </summary>
+    public static Vector3 Flinch(in Citizen citizen, ref Startle startle, float delta)
+    {
+        startle.Amount = MathF.Max(0, startle.Amount - delta * StartleRate);
+        var envelope = 4 * startle.Amount * (1 - startle.Amount) * (0.5f + citizen.Seed);
+        return envelope * (startle.Direction * FlinchDistance + Vector3.UnitY * FlinchHop);
+    }
+
+    /// <summary>
+    ///     A pulse running along a solved trail from its start, <paramref name="since"/> seconds after solving.
+    ///     Cells it passed keep an <paramref name="afterglow"/>.
+    /// </summary>
+    public static float Wave(int slot, float since, out float afterglow)
+    {
+        var distance = since * WaveSpeed - slot;
+        afterglow = SmoothStep(0, 1, distance);
+        return MathF.Exp(-distance * distance);
     }
 
     public static float Glow(in Citizen citizen, float time) => 1 + 0.5f * MathF.Sin(time * 3f + MathF.Tau * citizen.Seed);

@@ -9,6 +9,7 @@ namespace jam;
 ///     A puzzle level. The empty GridMap cells reachable from the streams' starts form the board, and the streams must
 ///     cover all of it. Arrow keys steer the selected stream, Tab selects the next one, and R restarts.
 ///     Expects a <see cref="Passives"/> child and one or more <see cref="Protesters"/> children.
+///     Its interludes are played around it by the <see cref="Campaign"/>.
 /// </summary>
 public partial class Level : GridMap
 {
@@ -16,6 +17,34 @@ public partial class Level : GridMap
     public delegate void SolvedEventHandler();
 
     public Puzzle Puzzle { get; private set; }
+
+    /// <summary>
+    ///     Global center of the board's bounding box.
+    /// </summary>
+    public Godot.Vector3 Center { get; private set; }
+
+    public Node3D SelectedHead => _streams[_selected].Head;
+
+    /// <summary>
+    ///     A locked level ignores input.
+    /// </summary>
+    public bool Locked { get; set; }
+
+    /// <summary>
+    ///     Shown in thick fog, before the fog clears.
+    /// </summary>
+    [ExportGroup("Interludes")]
+    [Export] public PackedScene Pretext { get; set; }
+
+    /// <summary>
+    ///     Shown once the fog cleared, before play begins.
+    /// </summary>
+    [Export] public PackedScene Intro { get; set; }
+
+    /// <summary>
+    ///     Shown after the level is solved, before the fog returns.
+    /// </summary>
+    [Export] public PackedScene Outro { get; set; }
 
     private Passives _passives;
     private Protesters[] _streams;
@@ -32,6 +61,10 @@ public partial class Level : GridMap
         var board = Board.FloodFill(_streams.Select(stream => stream.Start), IsOpen(out var bounds));
         Puzzle = new Puzzle(board, _streams.Select(stream => new TrailSpec(stream.Start, stream.End)));
 
+        var min = new Vector3I(board.Cells.Min(cell => cell.X), 0, board.Cells.Min(cell => cell.Z));
+        var max = new Vector3I(board.Cells.Max(cell => cell.X), 0, board.Cells.Max(cell => cell.Z));
+        Center = ToGlobal((MapToLocal(min) + MapToLocal(max)) / 2);
+
         var capacity = _passives.Populate(board.Cells, cell => MapToLocal(cell).ToNumerics());
         foreach (var renderer in GetChildren().OfType<CitizenRenderer>()) renderer.Allocate(capacity, bounds);
         foreach (var stream in _streams) stream.Begin(_passives);
@@ -41,6 +74,8 @@ public partial class Level : GridMap
 
     public override void _UnhandledInput(InputEvent ev)
     {
+        if (Locked || Puzzle.IsSolved) return;
+
         if (ev.IsActionPressed("ui_focus_next")) Select(_selected + 1);
         else if (ev.IsActionPressed("restart")) Restart();
         else if (Steering(ev) is { } direction) Step(_selected, direction);
@@ -51,10 +86,21 @@ public partial class Level : GridMap
 
     public MoveKind Step(int stream, Vector3I direction)
     {
+        var head = Puzzle.Trails[stream].Head;
         var move = Puzzle.TryMove(stream, direction);
         Apply(stream, move);
 
-        if (move.Kind != MoveKind.Blocked && Puzzle.IsSolved) EmitSignal(SignalName.Solved);
+        if (move.Kind == MoveKind.Blocked)
+        {
+            _streams[stream].Bump(direction);
+            _passives.Startle(move.Cell, Offset(head, move.Cell));
+        }
+        else if (Puzzle.IsSolved)
+        {
+            foreach (var each in _streams) each.Celebrate();
+            EmitSignal(SignalName.Solved);
+        }
+
         return move.Kind;
     }
 
@@ -82,7 +128,7 @@ public partial class Level : GridMap
             case MoveKind.Extended:
                 var previous = trail.Cells[^2];
                 stream.Steer(previous, Offset(previous, move.Cell));
-                stream.Join(move.Cell, Offset(move.Cell, previous));
+                stream.Join(move.Cell, Offset(move.Cell, previous), trail.Cells.Count - 1);
                 break;
             case MoveKind.Retracted:
                 stream.Leave(move.Cell);

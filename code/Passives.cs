@@ -13,12 +13,12 @@ public partial class Passives : CitizenRenderer
 {
     private readonly Dictionary<Vector3I, Entity[]> _citizens = new();
     private readonly Random _random = new(1312);
-    private Stream<Citizen, Matrix4X3Custom> _cubes;
+    private Stream<Citizen, Startle, Matrix4X3Custom> _cubes;
 
     public override void _Ready()
     {
         base._Ready();
-        _cubes = World.Query<Citizen, Matrix4X3Custom>().Has(Self).Stream();
+        _cubes = World.Query<Citizen, Startle, Matrix4X3Custom>().Has(Self).Stream();
     }
 
     /// <summary>
@@ -31,6 +31,7 @@ public partial class Passives : CitizenRenderer
             .Add(new Matrix4X3Custom())
             .Add(new Flow())
             .Add(new Activation())
+            .Add(new Startle())
             .Needs<Citizen>();
 
         foreach (var cell in cells)
@@ -49,11 +50,24 @@ public partial class Passives : CitizenRenderer
     /// </summary>
     public ReadOnlySpan<Entity> CitizensAt(Vector3I cell) => _citizens[cell];
 
+    /// <summary>
+    ///     Makes a cell's citizens flinch in <paramref name="direction"/>, wherever they are drawn. Ignores cells
+    ///     without citizens.
+    /// </summary>
+    public void Startle(Vector3I cell, Vector3 direction)
+    {
+        if (!_citizens.TryGetValue(cell, out var citizens)) return;
+        foreach (var citizen in citizens) citizen.Ref<Startle>() = new Startle(direction, 1);
+    }
+
     protected override void Animate(float time, float delta)
     {
-        _cubes.Job(time, static (float time, ref Citizen citizen, ref Matrix4X3Custom matrix) =>
+        _cubes.Job((time, delta), static ((float time, float delta) uniform,
+            ref Citizen citizen, ref Startle startle, ref Matrix4X3Custom matrix) =>
         {
-            matrix = new Matrix4X3Custom(CitizenMotion.Wander(citizen, time));
+            var position = CitizenMotion.Wander(citizen, uniform.time)
+                           + CitizenMotion.Flinch(citizen, ref startle, uniform.delta);
+            matrix = new Matrix4X3Custom(position);
         });
     }
 }

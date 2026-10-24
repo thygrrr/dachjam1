@@ -1,0 +1,28 @@
+[gd_resource type="MultiMesh" format=3 uid="uid://dqven0d3rd38"]
+
+[ext_resource type="Shader" uid="uid://bnwi7axyxrllt" path="res://shaders/glow_test.gdshader" id="1_glow"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_citizen"]
+render_priority = -6
+shader = ExtResource("1_glow")
+shader_parameter/albedo = Color(0.392157, 0.431373, 0.501961, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/emission_energy = 5.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_citizen"]
+material = SubResource("ShaderMaterial_citizen")
+size = Vector3(0.07, 0.15, 0.07)
+
+[resource]
+transform_format = 1
+use_custom_data = true
+mesh = SubResource("BoxMesh_citizen")

@@ -62,6 +62,25 @@ public class PuzzleTests
     }
 
     [Fact]
+    public void Solver_FindsTheRingsOnlySolution()
+    {
+        Assert.Equal(1, Solver.CountSolutions(Ring(), cap: 10));
+    }
+
+    [Fact]
+    public void Solver_ReportsUnsolvablePuzzles()
+    {
+        // Start and end share a checkerboard color, but a 4-cell path must end on the other color.
+        var puzzle = Parse(
+            "####",
+            "#A.#",
+            "#.a#",
+            "####");
+
+        Assert.Equal(0, Solver.CountSolutions(puzzle));
+    }
+
+    [Fact]
     public void Ring_ShortcutToEnd_IsNotSolved_AndCannotContinue()
     {
         var puzzle = Ring();

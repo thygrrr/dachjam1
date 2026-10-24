@@ -20,6 +20,11 @@ public abstract partial class CitizenRenderer : MultiMeshInstance3D
 
     public int Count => _matrices.Count;
 
+    /// <summary>
+    ///     The clock all renderers animate with, so citizens can switch renderers without a jump.
+    /// </summary>
+    protected static float Now => (float) (Time.GetTicksUsec() * 1e-6);
+
     private Stream<Matrix4X3Custom> _matrices;
     private float[] _buffer = [];
 
@@ -61,7 +66,7 @@ public abstract partial class CitizenRenderer : MultiMeshInstance3D
     public override void _Process(double delta)
     {
         base._Process(delta);
-        Animate((float) (Time.GetTicksUsec() * 1e-6), (float) delta);
+        Animate(Now, (float) delta);
         Upload();
     }
 

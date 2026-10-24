@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using fennecs;
 using Godot;
 using Vector3 = System.Numerics.Vector3;
@@ -14,11 +15,13 @@ public partial class Protesters : CitizenRenderer
     private const float SteerSharpness = 10f;
     private const float ActivationRate = 2.5f;
     private const float HeadSharpness = 20f;
+    private const float BumpDistance = 0.25f;
 
     [Export] public Color Tint { get; set; } = new(0.837501f, 0.484983f, 0f);
 
     public Vector3I Start { get; private set; }
     public Vector3I? End { get; private set; }
+    public Node3D Head => _head;
 
     public bool Selected
     {
@@ -30,9 +33,10 @@ public partial class Protesters : CitizenRenderer
     private Node3D _head;
     private Godot.Vector3 _headGoal;
     private float _headYaw;
+    private float _celebratedAt = float.NaN;
     private Passives _passives;
 
-    private Stream<Citizen, Flow, Activation, Matrix4X3Custom> _cubes;
+    private Stream<Citizen, Flow, Activation, Startle, Matrix4X3Custom> _cubes;
     private Stream<Activation> _activations;
 
     public override void _Ready()
@@ -41,11 +45,15 @@ public partial class Protesters : CitizenRenderer
 
         _grid = GetParent<GridMap>();
         _head = GetNode<Node3D>("Head");
-        Start = CellOf(GetNode<Node3D>("Start"));
-        End = GetNodeOrNull<Node3D>("End") is { } end ? CellOf(end) : null;
-        SetInstanceShaderParameter("tint", Tint);
+        var start = GetNode<GeometryInstance3D>("Start");
+        var end = GetNodeOrNull<GeometryInstance3D>("End");
+        Start = CellOf(start);
+        End = end is not null ? CellOf(end) : null;
 
-        _cubes = World.Query<Citizen, Flow, Activation, Matrix4X3Custom>().Has(Self).Stream();
+        SetInstanceShaderParameter("tint", Tint);
+        foreach (var marker in _head.GetChildren().OfType<GeometryInstance3D>().Append(start).Append(end)) Paint(marker);
+
+        _cubes = World.Query<Citizen, Flow, Activation, Startle, Matrix4X3Custom>().Has(Self).Stream();
         _activations = World.Query<Activation>().Has(Self).Stream();
     }
 
@@ -55,20 +63,21 @@ public partial class Protesters : CitizenRenderer
     public void Begin(Passives passives)
     {
         _passives = passives;
-        Join(Start, Vector3.Zero);
+        Join(Start, Vector3.Zero, 0);
         _headGoal = _head.Position = _grid.MapToLocal(Start);
         _headYaw = _head.Rotation.Y;
     }
 
     /// <summary>
-    ///     Recruits a cell's citizens; <paramref name="entry"/> points to the previous cell of the trail.
+    ///     Recruits a cell's citizens into trail position <paramref name="slot"/>; <paramref name="entry"/> points to
+    ///     the previous cell of the trail.
     /// </summary>
-    public void Join(Vector3I cell, Vector3 entry)
+    public void Join(Vector3I cell, Vector3 entry, int slot)
     {
         foreach (var citizen in _passives.CitizensAt(cell))
         {
             Adopt(citizen);
-            citizen.Ref<Flow>() = new Flow(entry, Vector3.Zero, Vector3.Zero);
+            citizen.Ref<Flow>() = new Flow(entry, Vector3.Zero, Vector3.Zero, slot);
             citizen.Ref<Activation>().Goal = 1;
         }
     }
@@ -95,6 +104,16 @@ public partial class Protesters : CitizenRenderer
         if (facing != Vector3I.Zero) _headYaw = MathF.Atan2(facing.X, facing.Z);
     }
 
+    /// <summary>
+    ///     Nudges the head towards a blocked cell; it springs back on its own.
+    /// </summary>
+    public void Bump(Vector3I direction) => _head.Position += new Godot.Vector3(direction.X, 0, direction.Z) * BumpDistance;
+
+    /// <summary>
+    ///     Sends a wave of light along the trail, from its start to its head.
+    /// </summary>
+    public void Celebrate() => _celebratedAt = Now;
+
     public override void _Process(double delta)
     {
         base._Process(delta);
@@ -107,19 +126,27 @@ public partial class Protesters : CitizenRenderer
 
     protected override void Animate(float time, float delta)
     {
-        _cubes.Job((time, delta), static ((float time, float delta) uniform,
-            ref Citizen citizen, ref Flow flow, ref Activation activation, ref Matrix4X3Custom matrix) =>
+        var celebration = float.IsNaN(_celebratedAt) ? -1 : time - _celebratedAt;
+
+        _cubes.Job((time, delta, celebration), static ((float time, float delta, float celebration) uniform,
+            ref Citizen citizen, ref Flow flow, ref Activation activation, ref Startle startle, ref Matrix4X3Custom matrix) =>
         {
             flow.Out = Vector3.Lerp(flow.Out, flow.OutGoal, 1 - MathF.Exp(-uniform.delta * SteerSharpness));
             activation.Value = CitizenMotion.MoveTowards(activation.Value, activation.Goal, uniform.delta * ActivationRate);
 
+            var pulse = 0f;
+            var afterglow = 0f;
+            if (uniform.celebration >= 0) pulse = CitizenMotion.Wave(flow.Slot, uniform.celebration, out afterglow);
+
             var blend = CitizenMotion.SmoothStep(activation.Value);
             var swirl = CitizenMotion.Swirl(citizen, flow, uniform.time, out var scale);
-            var position = Vector3.Lerp(CitizenMotion.Wander(citizen, uniform.time), swirl, blend);
+            var position = Vector3.Lerp(CitizenMotion.Wander(citizen, uniform.time), swirl, blend)
+                           + CitizenMotion.Flinch(citizen, ref startle, uniform.delta)
+                           + Vector3.UnitY * (0.3f * pulse * blend);
 
-            matrix = new Matrix4X3Custom(position, float.Lerp(1, scale, blend))
+            matrix = new Matrix4X3Custom(position, float.Lerp(1, scale, blend) * (1 + 0.5f * pulse))
             {
-                Emission = blend * CitizenMotion.Glow(citizen, uniform.time),
+                Emission = blend * CitizenMotion.Glow(citizen, uniform.time) * (1 + 3 * pulse + afterglow),
                 Activation = blend,
             };
         });
@@ -132,6 +159,16 @@ public partial class Protesters : CitizenRenderer
         {
             if (activation is { Goal: 0, Value: 0 }) _passives.Adopt(citizen.Entity);
         });
+    }
+
+    // Recolors a glowing marker's emission with the stream's tint.
+    private void Paint(GeometryInstance3D marker)
+    {
+        if (marker is not MeshInstance3D { Mesh: { } mesh } || mesh.SurfaceGetMaterial(0) is not BaseMaterial3D material) return;
+
+        var tinted = (BaseMaterial3D) material.Duplicate();
+        tinted.Emission = Tint;
+        marker.MaterialOverride = tinted;
     }
 
     private Vector3I CellOf(Node3D marker) => _grid.LocalToMap(_grid.ToLocal(marker.GlobalPosition));

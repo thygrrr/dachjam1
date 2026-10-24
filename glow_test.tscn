@@ -1,53 +1,19 @@
-[gd_scene load_steps=22 format=3 uid="uid://bybpqf880sl1t"]
+[gd_scene format=3 uid="uid://bybpqf880sl1t"]
 
 [ext_resource type="Script" uid="uid://ts62aa2lgsgi" path="res://code/look_at.gd" id="1_abbf7"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="1_eo7j0"]
 [ext_resource type="Environment" uid="uid://dnwg1c50c6neh" path="res://environment/env_world.tres" id="1_vpl8t"]
 [ext_resource type="Script" uid="uid://ba55b7f4cg6mn" path="res://code/ECS.cs" id="3_eus8d"]
 [ext_resource type="FontFile" uid="uid://bunrpttlprt1h" path="res://fonts/Bytesized-Regular.ttf" id="3_jqqo2"]
-[ext_resource type="Shader" uid="uid://bnwi7axyxrllt" path="res://shaders/glow_test.gdshader" id="4_1kcea"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="4_b0etf"]
-[ext_resource type="Script" uid="uid://bqoe8cdhpxjl5" path="res://code/Level.cs" id="5_oeosn"]
+[ext_resource type="Script" uid="uid://bdkbsybdqs3b" path="res://code/Campaign.cs" id="5_cmpgn"]
 [ext_resource type="PackedScene" uid="uid://sektlfvpvrp0" path="res://levels/level0.tscn" id="6_1kcea"]
-[ext_resource type="Script" uid="uid://dp2muumk5ufvh" path="res://code/Protesters.cs" id="7_oeosn"]
-[ext_resource type="Script" uid="uid://bm6bnk5v80qyh" path="res://code/Passives.cs" id="7_pssvs"]
-[ext_resource type="Material" uid="uid://ceg4rycg7v8my" path="res://shaders/glow_test.tres" id="8_oeosn"]
+[ext_resource type="PackedScene" path="res://levels/level1.tscn" id="6_lvl1"]
+[ext_resource type="PackedScene" path="res://levels/level2.tscn" id="6_lvl2"]
+[ext_resource type="PackedScene" path="res://levels/level3.tscn" id="6_lvl3"]
+[ext_resource type="PackedScene" path="res://levels/level4.tscn" id="6_lvl4"]
 [ext_resource type="Texture2D" uid="uid://dql5pwql80ldp" path="res://textures/jamandswoon-logo.png" id="10_1kcea"]
 [ext_resource type="LabelSettings" uid="uid://bpr50gc8rlreu" path="res://fonts/intro.labelsettings.tres" id="12_mlcxa"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_oeosn"]
-render_priority = -6
-shader = ExtResource("4_1kcea")
-shader_parameter/albedo = Color(0.392157, 0.431373, 0.501961, 1)
-shader_parameter/albedo_texture_size = Vector2i(0, 0)
-shader_parameter/point_size = 1.0
-shader_parameter/roughness = 1.0
-shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
-shader_parameter/specular = 0.5
-shader_parameter/metallic = 0.0
-shader_parameter/emission_energy = 5.0
-shader_parameter/uv1_scale = Vector3(1, 1, 1)
-shader_parameter/uv1_offset = Vector3(0, 0, 0)
-shader_parameter/uv2_scale = Vector3(1, 1, 1)
-shader_parameter/uv2_offset = Vector3(0, 0, 0)
-
-[sub_resource type="BoxMesh" id="BoxMesh_m018v"]
-material = SubResource("ShaderMaterial_oeosn")
-size = Vector3(0.07, 0.15, 0.07)
-
-[sub_resource type="MultiMesh" id="MultiMesh_eus8d"]
-transform_format = 1
-use_custom_data = true
-mesh = SubResource("BoxMesh_m018v")
-
-[sub_resource type="TorusMesh" id="TorusMesh_oeosn"]
-material = ExtResource("8_oeosn")
-inner_radius = 0.3
-outer_radius = 0.35
-
-[sub_resource type="PrismMesh" id="PrismMesh_mlcxa"]
-material = ExtResource("8_oeosn")
-size = Vector3(0.3, 0.3, 0.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_8kfqt"]
 material = ExtResource("1_eo7j0")
@@ -63,20 +29,27 @@ shader_parameter/vignette_color = Color(0.246314, 0.275395, 0.327805, 1)
 
 [node name="Node3D" type="Node3D" unique_id=971528840]
 
-[node name="Camera Offset" type="Node3D" parent="." unique_id=1365567024]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 9, 3)
+[node name="Camera Rig" type="Node3D" parent="." unique_id=2127029072]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
 
-[node name="Camera PitchYaw" type="Node3D" parent="Camera Offset" unique_id=1136621962 node_paths=PackedStringArray("target")]
+[node name="Camera Offset" type="Node3D" parent="Camera Rig" unique_id=1365567024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 6, 1)
+
+[node name="Camera PitchYaw" type="Node3D" parent="Camera Rig/Camera Offset" unique_id=1136621962 node_paths=PackedStringArray("target")]
 transform = Transform3D(0.742542, 0.5074, -0.437236, 0, 0.652787, 0.757541, 0.669799, -0.562507, 0.484722, 0, 0, 0)
 script = ExtResource("1_abbf7")
-target = NodePath("../../Level/Protesters/Head/Arrow")
+target = NodePath("../../../Focus")
+frequency = 0.015
 
-[node name="Camera3D" type="Camera3D" parent="Camera Offset/Camera PitchYaw" unique_id=6850855]
+[node name="Camera3D" type="Camera3D" parent="Camera Rig/Camera Offset/Camera PitchYaw" unique_id=6850855]
 transform = Transform3D(1, 0, 5.96046e-08, -2.98023e-08, 1, -1.49012e-08, 2.98023e-08, -1.49012e-08, 1, 0, 0, 0)
 fov = 30.0
 size = 5.0
-near = 5.0
+near = 0.01
 far = 500.0
+
+[node name="Focus" type="Node3D" parent="." unique_id=1098356524]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.2, 1)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=669938962]
 environment = ExtResource("1_vpl8t")
@@ -84,34 +57,16 @@ environment = ExtResource("1_vpl8t")
 [node name="ECS" type="Node" parent="." unique_id=414742345]
 script = ExtResource("3_eus8d")
 
-[node name="Level" parent="." unique_id=58127753 instance=ExtResource("6_1kcea")]
-script = ExtResource("5_oeosn")
+[node name="Campaign" type="Node3D" parent="." unique_id=1088291254 node_paths=PackedStringArray("CameraRig", "Focus", "World", "Stage")]
+script = ExtResource("5_cmpgn")
+Levels = [ExtResource("6_1kcea"), ExtResource("6_lvl1"), ExtResource("6_lvl2"), ExtResource("6_lvl3"), ExtResource("6_lvl4")]
+CameraRig = NodePath("../Camera Rig")
+Focus = NodePath("../Focus")
+World = NodePath("../WorldEnvironment")
+Stage = NodePath("../Interludes")
 
-[node name="Protesters" type="MultiMeshInstance3D" parent="Level" unique_id=789506574]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
-multimesh = SubResource("MultiMesh_eus8d")
-script = ExtResource("7_oeosn")
-
-[node name="Start" type="MeshInstance3D" parent="Level/Protesters" unique_id=630418394]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -4.47035e-08, 1)
-mesh = SubResource("TorusMesh_oeosn")
-
-[node name="End" type="MeshInstance3D" parent="Level/Protesters" unique_id=1602776666]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -4.47035e-08, 1)
-mesh = SubResource("TorusMesh_oeosn")
-
-[node name="Head" type="Node3D" parent="Level/Protesters" unique_id=1632221139]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
-
-[node name="Arrow" type="MeshInstance3D" parent="Level/Protesters/Head" unique_id=1228677230]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.59654e-09, 0.0365247)
-mesh = SubResource("PrismMesh_mlcxa")
-skeleton = NodePath("../..")
-
-[node name="Passives" type="MultiMeshInstance3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
-multimesh = SubResource("MultiMesh_eus8d")
-script = ExtResource("7_pssvs")
+[node name="Interludes" type="CanvasLayer" parent="." unique_id=147216381]
+layer = 2
 
 [node name="graffiti" type="Node3D" parent="." unique_id=2111007798]
 visible = false
@@ -190,18 +145,6 @@ offset_bottom = 785.0
 text = "fear the fade"
 label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 2
-
-[node name="Label3" type="Label" parent="." unique_id=1741541746]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Grausamkeit empört,
-Dummheit entmutigt."
-label_settings = ExtResource("12_mlcxa")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Label4" type="Label" parent="." unique_id=1839627206]
 visible = false

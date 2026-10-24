@@ -9,22 +9,28 @@ namespace dachjam.Tests;
 [Collection<HeadlessCollection>]
 public sealed class MainSceneTests : IDisposable
 {
-    private const int Cells = 16;
+    private const int Level0Cells = 16;
+    private const int Level1Cells = 18;
     private const int PerCell = CitizenMotion.PerCell;
+    private const string WorldEnvironment = "res://environment/env_world.tres";
 
     private readonly HeadlessFixture _godot;
     private readonly Node _root;
     private readonly int _entitiesBefore = ECS.World.Count;
 
-    private Level Level => _root.GetNode<Level>("Level");
-    private Protesters Protesters => _root.GetNode<Protesters>("Level/Protesters");
-    private Passives Passives => _root.GetNode<Passives>("Level/Passives");
+    private Campaign Campaign => _root.GetNode<Campaign>("Campaign");
+    private Level Level => Campaign.Current;
+    private Protesters Orange => Level.GetNode<Protesters>("Orange");
+    private Passives Passives => Level.GetNode<Passives>("Passives");
+    private Node Stage => _root.GetNode("Interludes");
+    private Godot.Environment Fog => _root.GetNode<WorldEnvironment>("WorldEnvironment").Environment;
 
     public MainSceneTests(HeadlessFixture godot)
     {
         _godot = godot;
         using var scene = GD.Load<PackedScene>((string) ProjectSettings.GetSetting("application/run/main_scene"));
         _root = scene.Instantiate();
+        _root.GetNode<Campaign>("Campaign").FogTime = 0.01;
         godot.Tree.Root.AddChild(_root);
     }
 
@@ -45,27 +51,85 @@ public sealed class MainSceneTests : IDisposable
         return condition();
     }
 
+    private static void Press(string action)
+    {
+        Input.ParseInputEvent(new InputEventAction { Action = action, Pressed = true });
+        Input.ParseInputEvent(new InputEventAction { Action = action, Pressed = false });
+    }
+
+    private void Unlocked() => Assert.True(FramesUntil(() => !Level.Locked), "The level stayed locked.");
+
+    private void SolveLevel0()
+    {
+        Vector3I[] directions = [Vector3I.Right, Vector3I.Back, Vector3I.Left, Vector3I.Forward];
+        foreach (var direction in directions)
+        {
+            for (var i = 0; i < (direction == Vector3I.Right ? 3 : 4); i++) Level.Step(0, direction);
+        }
+    }
+
+    // An interlude that lasts until the test frees it.
+    private static PackedScene Interlude(string name)
+    {
+        var root = new Control { Name = name };
+        var scene = new PackedScene();
+        Assert.Equal(Error.Ok, scene.Pack(root));
+        root.Free();
+        return scene;
+    }
+
+    private static PackedScene WithInterludes(PackedScene scene)
+    {
+        var level = scene.Instantiate<Level>();
+        level.Pretext = Interlude("Pretext");
+        level.Intro = Interlude("Intro");
+        level.Outro = Interlude("Outro");
+
+        var packed = new PackedScene();
+        Assert.Equal(Error.Ok, packed.Pack(level));
+        level.Free();
+        return packed;
+    }
+
+    private Node Showing(string interlude)
+    {
+        Assert.True(FramesUntil(() => Stage.HasNode(interlude)), $"{interlude} never showed.");
+        return Stage.GetNode(interlude);
+    }
+
     [Fact]
     public void Start_RecruitsOnlyTheStartCell()
     {
         Frames(2);
 
-        Assert.Equal(PerCell, Protesters.Count);
-        Assert.Equal((Cells - 1) * PerCell, Passives.Count);
-        Assert.Equal(Cells * PerCell, Passives.Multimesh.InstanceCount);
-        Assert.Equal(Cells * PerCell, Protesters.Multimesh.InstanceCount);
-        Assert.Equal(PerCell, Protesters.Multimesh.VisibleInstanceCount);
+        Assert.Equal(0, Campaign.Index);
+        Assert.Equal(PerCell, Orange.Count);
+        Assert.Equal((Level0Cells - 1) * PerCell, Passives.Count);
+        Assert.Equal(Level0Cells * PerCell, Orange.Multimesh.InstanceCount);
+        Assert.Equal(PerCell, Orange.Multimesh.VisibleInstanceCount);
     }
 
     [Fact]
     public void Input_ExtendsTheSelectedStream()
     {
-        Input.ParseInputEvent(new InputEventAction { Action = "ui_up", Pressed = true });
-        Input.ParseInputEvent(new InputEventAction { Action = "ui_up", Pressed = false });
+        Unlocked();
+
+        Press("ui_up");
         Frames(2);
 
         Assert.Equal(2, Level.Puzzle.Trails[0].Cells.Count);
-        Assert.Equal(2 * PerCell, Protesters.Count);
+        Assert.Equal(2 * PerCell, Orange.Count);
+    }
+
+    [Fact]
+    public void LockedLevel_IgnoresInput()
+    {
+        Assert.True(Level.Locked);
+
+        Press("ui_up");
+        Frames(1);
+
+        Assert.Single(Level.Puzzle.Trails[0].Cells);
     }
 
     [Fact]
@@ -73,10 +137,22 @@ public sealed class MainSceneTests : IDisposable
     {
         Assert.Equal(MoveKind.Extended, Level.Step(0, Vector3I.Right));
         Assert.Equal(MoveKind.Retracted, Level.Step(0, Vector3I.Left));
-        Assert.Equal(2 * PerCell, Protesters.Count);
+        Assert.Equal(2 * PerCell, Orange.Count);
 
-        Assert.True(FramesUntil(() => Passives.Count == (Cells - 1) * PerCell));
-        Assert.Equal(PerCell, Protesters.Count);
+        Assert.True(FramesUntil(() => Passives.Count == (Level0Cells - 1) * PerCell));
+        Assert.Equal(PerCell, Orange.Count);
+    }
+
+    [Fact]
+    public void BlockedMove_StartlesTheCitizensInTheWay()
+    {
+        var blocked = new Vector3I(1, 0, 2);
+        Level.Step(0, Vector3I.Left);
+
+        Assert.Equal(MoveKind.Blocked, Level.Step(0, Vector3I.Back));
+        Assert.All(Passives.CitizensAt(blocked).ToArray(), citizen => Assert.Equal(1, citizen.Ref<Startle>().Amount));
+
+        Assert.True(FramesUntil(() => Passives.CitizensAt(blocked)[0].Ref<Startle>().Amount == 0));
     }
 
     [Fact]
@@ -88,30 +164,118 @@ public sealed class MainSceneTests : IDisposable
         Level.Restart();
 
         Assert.Single(Level.Puzzle.Trails[0].Cells);
-        Assert.True(FramesUntil(() => Protesters.Count == PerCell));
+        Assert.True(FramesUntil(() => Orange.Count == PerCell));
     }
 
     [Fact]
     public void LongWayRound_SolvesLevel0()
     {
         using var solved = GodotAssert.ExpectSignal(Level, Level.SignalName.Solved);
-        Vector3I[] directions = [Vector3I.Right, Vector3I.Back, Vector3I.Left, Vector3I.Forward];
 
-        foreach (var direction in directions)
-        {
-            for (var i = 0; i < (direction == Vector3I.Right ? 3 : 4); i++) Level.Step(0, direction);
-        }
+        SolveLevel0();
 
         solved.AssertEmitted();
         Frames(2);
-        Assert.Equal(Cells * PerCell, Protesters.Count);
+        Assert.Equal(Level0Cells * PerCell, Orange.Count);
         Assert.Equal(0, Passives.Count);
+    }
+
+    [Fact]
+    public void SolvedLevel_IgnoresInput()
+    {
+        Unlocked();
+        SolveLevel0();
+
+        Press("restart");
+        Frames(2);
+
+        Assert.True(Level.Puzzle.IsSolved);
+    }
+
+    [Fact]
+    public void SolvedLevel_AdvancesToTheNextLevel_AndDespawnsTheOld()
+    {
+        Campaign.AdvanceDelay = 0.01;
+
+        SolveLevel0();
+
+        Assert.True(FramesUntil(() => Campaign.Index == 1));
+        Assert.Equal(2, Level.Puzzle.Trails.Count);
+        Assert.Equal(_entitiesBefore + Level1Cells * PerCell, ECS.World.Count);
+    }
+
+    [Fact]
+    public void Fog_ClearsForPlay_WithoutChangingTheEnvironmentResource()
+    {
+        Assert.Equal(GD.Load<Godot.Environment>(WorldEnvironment).VolumetricFogDensity, Campaign.ThickFog);
+        Assert.Equal(Campaign.ThickFog, Fog.VolumetricFogDensity);
+
+        Unlocked();
+
+        Assert.Equal(Campaign.PlayFog, Fog.VolumetricFogDensity, 0.001f);
+        Assert.Equal(Campaign.ThickFog, GD.Load<Godot.Environment>(WorldEnvironment).VolumetricFogDensity);
+    }
+
+    [Fact]
+    public void Interludes_SandwichEachLevel()
+    {
+        Campaign.AdvanceDelay = 0.01;
+        Campaign.Levels = [WithInterludes(Campaign.Levels[0]), WithInterludes(Campaign.Levels[1])];
+        Campaign.Load(0);
+
+        var pretext = Showing("Pretext");
+        Frames(5);
+        Assert.Equal(Campaign.ThickFog, Fog.VolumetricFogDensity);
+        pretext.QueueFree();
+
+        var intro = Showing("Intro");
+        Assert.Equal(Campaign.PlayFog, Fog.VolumetricFogDensity, 0.001f);
+        Assert.True(Level.Locked);
+        intro.QueueFree();
+
+        Unlocked();
+        SolveLevel0();
+
+        var outro = Showing("Outro");
+        Assert.Equal(Campaign.PlayFog, Fog.VolumetricFogDensity, 0.001f);
+        outro.QueueFree();
+
+        Showing("Pretext");
+        Assert.Equal(1, Campaign.Index);
+        Assert.Equal(Campaign.ThickFog, Fog.VolumetricFogDensity);
+    }
+
+    [Fact]
+    public void InterludeTemplate_FreesItselfWhenDone()
+    {
+        var interlude = GD.Load<PackedScene>("res://interludes/interlude.tscn").Instantiate();
+        interlude.Set("fade", 0.01);
+        interlude.Set("hold", 0.01);
+
+        _godot.Tree.Root.AddChild(interlude);
+
+        Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(interlude)));
+    }
+
+    [Fact]
+    public void Tab_SelectsTheNextStream()
+    {
+        Campaign.Load(1);
+        var teal = Level.GetNode<Protesters>("Teal");
+        Unlocked();
+
+        Press("ui_focus_next");
+        Frames(2);
+
+        Assert.Same(teal.Head, Level.SelectedHead);
+        Assert.True(teal.Selected);
+        Assert.False(Orange.Selected);
     }
 
     [Fact]
     public void FreeingTheScene_DespawnsItsCitizens()
     {
-        Assert.Equal(_entitiesBefore + Cells * PerCell, ECS.World.Count);
+        Assert.Equal(_entitiesBefore + Level0Cells * PerCell, ECS.World.Count);
 
         _root.Free();
 
