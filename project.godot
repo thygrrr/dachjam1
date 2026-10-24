@@ -11,10 +11,10 @@ config_version=5
 [application]
 
 config/name="[grau.exe]"
-run/main_scene="uid://bybpqf880sl1t"
-config/features=PackedStringArray("4.6", "C#", "Forward Plus")
-config/icon="res://icon.svg"
 config/tags=PackedStringArray("game")
+run/main_scene="uid://bybpqf880sl1t"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+config/icon="res://icon.svg"
 
 [autoload]
 
@@ -93,3 +93,4 @@ anti_aliasing/quality/use_debanding=true
 global_illumination/sdfgi/probe_ray_count=4
 anti_aliasing/quality/use_taa=true
 environment/defaults/default_environment="uid://dnwg1c50c6neh"
+renderer.web/rendering_method="mobile"

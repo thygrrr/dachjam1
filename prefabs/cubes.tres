@@ -1,4 +1,4 @@
-[gd_resource type="MeshLibrary" load_steps=17 format=3 uid="uid://bndms4kmx7nx0"]
+[gd_resource type="MeshLibrary" format=3 uid="uid://bndms4kmx7nx0"]
 
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="1_v686u"]
 
