@@ -1,10 +1,29 @@
-<Project Sdk="Godot.NET.Sdk/4.5.0">
+<Project Sdk="Godot.NET.Sdk/4.7.2">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>jam</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="fennecs" Version="0.5.16-beta" />
+    <PackageReference Include="fennecs" Version="0.7.2" />
   </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="2dog.godotsharp" Version="$(TwoDogVersion)" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="2dog.godotsharp.editor" Version="$(TwoDogVersion)" Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Editor'" />
+    </ItemGroup>
+    <!-- added by the 2dog tool: properties 2dog hosts need that were not already set -->
+    <PropertyGroup>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DefaultItemExcludes>$(DefaultItemExcludes);dachjam.2dog/**</DefaultItemExcludes>
+    </PropertyGroup>
+    <!-- added by the 2dog tool: properties 2dog hosts need that were not already set -->
+    <PropertyGroup>
+        <DefaultItemExcludes>$(DefaultItemExcludes);dachjam.xunit/**</DefaultItemExcludes>
+    </PropertyGroup>
+    <!-- added by the 2dog tool: properties 2dog hosts need that were not already set -->
+    <PropertyGroup>
+        <DefaultItemExcludes>$(DefaultItemExcludes);dachjam.repl/**</DefaultItemExcludes>
+    </PropertyGroup>
 </Project>

@@ -1,143 +1,138 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using fennecs;
 using Godot;
 using Vector3 = System.Numerics.Vector3;
 
 namespace jam;
 
-public partial class Protesters : MultiMeshInstance3D
+/// <summary>
+///     One stream of thought: draws the citizens recruited into its trail, swirling along it in <see cref="Tint"/>.
+///     Expects child markers <c>Start</c> (required) and <c>End</c> (optional), a <c>Head</c>, and a parent GridMap.
+/// </summary>
+public partial class Protesters : CitizenRenderer
 {
-    private static World World => ECS.World;
-    private Stream<Matrix4X3Custom, Index, Tile, Protesters> _cubes;
+    private const float SteerSharpness = 10f;
+    private const float ActivationRate = 2.5f;
+    private const float HeadSharpness = 20f;
 
-    private List<Tile> _tiles = [];
-    
-    private float _timeAccumulator;
+    [Export] public Color Tint { get; set; } = new(0.837501f, 0.484983f, 0f);
 
-    public Vector3I Head => _grid.LocalToMap(_head.Position);
-    
-    private FastNoiseLite _noiseLite = new()
+    public Vector3I Start { get; private set; }
+    public Vector3I? End { get; private set; }
+
+    public bool Selected
     {
-        Frequency = 0.05f,
-    };
+        get => _head.Visible;
+        set => _head.Visible = value;
+    }
 
-    private int _count;
-    private const int PerTileCount = 25;
-    
-    private readonly Random _random = new();
-    private EntitySpawner _spawner;
-    private Stream<Index> _indexer;
     private GridMap _grid;
-    
     private Node3D _head;
-    private Vector3I _home;
+    private Godot.Vector3 _headGoal;
+    private float _headYaw;
+    private Passives _passives;
+
+    private Stream<Citizen, Flow, Activation, Matrix4X3Custom> _cubes;
+    private Stream<Activation> _activations;
 
     public override void _Ready()
     {
         base._Ready();
 
         _grid = GetParent<GridMap>();
-
-        Multimesh.InstanceCount = 0;
-        Multimesh.VisibleInstanceCount = 0;
-        _cubes = World.Query<Matrix4X3Custom, Index, Tile, Protesters>(default, default, default, Link.With(this)).Has<Cube>().Stream();
-        _indexer = World.Query<Index>().Has<Cube>().Has(Link.With(this)).Stream();
-
         _head = GetNode<Node3D>("Head");
-        _home = Head;
-        _spawner = World.Entity()
-            .Add<Cube>()
-            .Add<Matrix4X3Custom>()
-            .Add<Index>()
-            .Add(Link.With(this));
-        
-        _tiles.Add(new(_home));
+        Start = CellOf(GetNode<Node3D>("Start"));
+        End = GetNodeOrNull<Node3D>("End") is { } end ? CellOf(end) : null;
+        SetInstanceShaderParameter("tint", Tint);
+
+        _cubes = World.Query<Citizen, Flow, Activation, Matrix4X3Custom>().Has(Self).Stream();
+        _activations = World.Query<Activation>().Has(Self).Stream();
     }
 
-
-    public void ClaimTile(Vector3I point)
+    /// <summary>
+    ///     Recruits the start cell. Released citizens return to <paramref name="passives"/>.
+    /// </summary>
+    public void Begin(Passives passives)
     {
-        for (var i = 0; i < _tiles.Count-2; i++)
+        _passives = passives;
+        Join(Start, Vector3.Zero);
+        _headGoal = _head.Position = _grid.MapToLocal(Start);
+        _headYaw = _head.Rotation.Y;
+    }
+
+    /// <summary>
+    ///     Recruits a cell's citizens; <paramref name="entry"/> points to the previous cell of the trail.
+    /// </summary>
+    public void Join(Vector3I cell, Vector3 entry)
+    {
+        foreach (var citizen in _passives.CitizensAt(cell))
         {
-            _tiles[i+1].Move(_tiles[i]);
+            Adopt(citizen);
+            citizen.Ref<Flow>() = new Flow(entry, Vector3.Zero, Vector3.Zero);
+            citizen.Ref<Activation>().Goal = 1;
         }
-
-        _tiles[0].Move(point);
-
-        _tiles.Add(new(_home));
-        _spawner.Add(_tiles[^1]);
-        _spawner.Spawn(PerTileCount);
-        
-        _count += PerTileCount;
-        Multimesh.InstanceCount = _count;
-        Multimesh.VisibleInstanceCount = _count;
-        
-        _head.Position = _grid.MapToLocal(point);
-        
-        BuildIndex();
     }
 
-    private void BuildIndex()
+    /// <summary>
+    ///     Lets a cell's citizens fade out; once idle, they return to the passives.
+    /// </summary>
+    public void Leave(Vector3I cell)
     {
-        var i = 0;
-        _indexer.For((ref Index index) => index.Value = i++);
+        foreach (var citizen in _passives.CitizensAt(cell)) citizen.Ref<Activation>().Goal = 0;
     }
-    
+
+    /// <summary>
+    ///     Points a cell's flow at the next cell of the trail, or ends it there for a zero <paramref name="exit"/>.
+    /// </summary>
+    public void Steer(Vector3I cell, Vector3 exit)
+    {
+        foreach (var citizen in _passives.CitizensAt(cell)) citizen.Ref<Flow>().OutGoal = exit;
+    }
+
+    public void MoveHead(Vector3I cell, Vector3I facing)
+    {
+        _headGoal = _grid.MapToLocal(cell);
+        if (facing != Vector3I.Zero) _headYaw = MathF.Atan2(facing.X, facing.Z);
+    }
+
     public override void _Process(double delta)
     {
         base._Process(delta);
+        HandBack();
 
-        var dt = (float) delta;
-        _timeAccumulator += dt;
-        
-        _cubes.Job(
-            uniform: (_timeAccumulator, _noiseLite), 
-            action: ((float time, FastNoiseLite noise) uniform, ref Matrix4X3Custom matrix, ref Index index, ref Tile tile) =>
+        var t = 1 - MathF.Exp(-(float) delta * HeadSharpness);
+        _head.Position = _head.Position.Lerp(_headGoal, t);
+        _head.Rotation = _head.Rotation with { Y = Mathf.LerpAngle(_head.Rotation.Y, _headYaw, t) };
+    }
+
+    protected override void Animate(float time, float delta)
+    {
+        _cubes.Job((time, delta), static ((float time, float delta) uniform,
+            ref Citizen citizen, ref Flow flow, ref Activation activation, ref Matrix4X3Custom matrix) =>
         {
-            var iv = index.Value * 20f;
-            var jv = index.Value * 30f;
-            
-            var brownianX = uniform.noise.GetNoise3D(tile.X, uniform.time, tile.Z + jv) * 0.8f; 
-            var brownianY = uniform.noise.GetNoise3D(tile.X + iv, tile.Z, uniform.time) * 0.01f; 
-            var brownianZ = uniform.noise.GetNoise3D(tile.X, tile.Z + iv, uniform.time) * 0.8f; 
-            var pos = new Vector3(tile.X , 0, tile.Z) + new Vector3(brownianX, brownianY, brownianZ);
-            matrix = new(pos)
+            flow.Out = Vector3.Lerp(flow.Out, flow.OutGoal, 1 - MathF.Exp(-uniform.delta * SteerSharpness));
+            activation.Value = CitizenMotion.MoveTowards(activation.Value, activation.Goal, uniform.delta * ActivationRate);
+
+            var blend = CitizenMotion.SmoothStep(activation.Value);
+            var swirl = CitizenMotion.Swirl(citizen, flow, uniform.time, out var scale);
+            var position = Vector3.Lerp(CitizenMotion.Wander(citizen, uniform.time), swirl, blend);
+
+            matrix = new Matrix4X3Custom(position, float.Lerp(1, scale, blend))
             {
-                Emission = Mathf.Sin(uniform.time + index.Value) + 1.0f,
+                Emission = blend * CitizenMotion.Glow(citizen, uniform.time),
+                Activation = blend,
             };
         });
-        
-        _cubes.Raw(
-            uniform: (Multimesh.GetRid(), _count * Matrix4X3Custom.SizeInFloats),
-            action: static ((Rid mesh, int count) uniform, Memory<Matrix4X3Custom> transforms) =>
-            {
-                var floatSpan = MemoryMarshal.Cast<Matrix4X3Custom, float>(transforms.Span);
-                RenderingServer.MultimeshSetBuffer(uniform.mesh, floatSpan[..uniform.count]);
-            });
     }
-    
-    private record struct Cube;
 
-    private record struct Index(int Value);
-    
-    private class Tile(Vector3I point)
+    // Faded-out citizens wander exactly like passives, so handing them over is seamless.
+    private void HandBack()
     {
-        public int X { get; private set; } = point.X;
-        public int Z { get; private set; } = point.Z;
-
-        public void Move(Vector3I other)
+        _activations.For((in EntityRef citizen, ref Activation activation) =>
         {
-            X = other.X;
-            Z = other.Z;
-        }
-
-        public void Move(Tile other)
-        {
-            X = other.X;
-            Z = other.Z;
-        }
+            if (activation is { Goal: 0, Value: 0 }) _passives.Adopt(citizen.Entity);
+        });
     }
-}
 
+    private Vector3I CellOf(Node3D marker) => _grid.LocalToMap(_grid.ToLocal(marker.GlobalPosition));
+}

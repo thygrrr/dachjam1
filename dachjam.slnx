@@ -1,0 +1,17 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="ExportDebug" />
+    <BuildType Name="ExportRelease" />
+  </Configurations>
+  <Project Path="dachjam.2dog/dachjam.2dog.csproj">
+    <BuildType Project="Debug" />
+  </Project>
+  <Project Path="dachjam.csproj" />
+  <Project Path="dachjam.repl/dachjam.repl.csproj">
+    <BuildType Project="Debug" />
+  </Project>
+  <Project Path="dachjam.xunit/dachjam.xunit.csproj">
+    <BuildType Project="Debug" />
+  </Project>
+</Solution>

@@ -17,7 +17,7 @@ uniform float specular : hint_range(0.0, 1.0, 0.01);
 uniform float metallic : hint_range(0.0, 1.0, 0.01);
 
 uniform sampler2D texture_emission : source_color, hint_default_black, filter_linear_mipmap, repeat_enable;
-uniform vec4 emission : source_color;
+instance uniform vec4 tint : source_color = vec4(0.837501, 0.484983, 0.0, 1.0);
 uniform float emission_energy : hint_range(0.0, 100.0, 0.01);
 
 uniform vec3 uv1_scale;
@@ -26,17 +26,19 @@ uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
 
 varying float color_boost;
+varying float activation;
 
 void vertex() {
 	UV = UV * uv1_scale.xy + uv1_offset.xy;
     color_boost = INSTANCE_CUSTOM.r * 5.0;
+    activation = INSTANCE_CUSTOM.g;
 }
 
 void fragment() {
 	vec2 base_uv = UV;
 
 	vec4 albedo_tex = texture(texture_albedo, base_uv);
-	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	ALBEDO = mix(albedo.rgb * albedo_tex.rgb, tint.rgb, activation * 0.5);
 
 	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
 	METALLIC = metallic_tex * metallic;
@@ -49,5 +51,5 @@ void fragment() {
 	// Emission: Enabled
 	vec3 emission_tex = texture(texture_emission, base_uv).rgb;
 	// Emission Operator: Add
-	EMISSION = (emission.rgb + emission_tex) * emission_energy * color_boost;
+	EMISSION = (tint.rgb + emission_tex) * emission_energy * color_boost;
 }

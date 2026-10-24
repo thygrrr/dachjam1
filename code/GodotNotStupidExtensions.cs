@@ -13,4 +13,6 @@ public static class GodotNotStupidExtensions
     }
     
     public static Vector3? IntersectsRay(this Plane self, (Vector3 origin, Vector3 direction) ray) => self.IntersectsRay(ray.origin, ray.direction);
+
+    public static System.Numerics.Vector3 ToNumerics(this Vector3 self) => new(self.X, self.Y, self.Z);
 }

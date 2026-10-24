@@ -3,3 +3,7 @@
 /android/
 
 build
+
+# .NET build output of the 2dog host projects
+bin/
+obj/

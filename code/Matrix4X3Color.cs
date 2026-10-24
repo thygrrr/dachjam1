@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 namespace jam;
 
 /// <summary>
-///     A 4x3 matrix / 3x4 matrix comprised of 12 floats. + 4 Custom Data floats.
+///     A 4x3 matrix / 3x4 matrix comprised of 12 floats, followed by 4 custom data floats.
 ///     It uses an orthogonal, non-unit basis, and a translation vector.
 ///     Works with MultiMesh in <see cref="Godot.MultiMesh.TransformFormat" /> 3D.
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Pack = 4, Size = 48)]
+[StructLayout(LayoutKind.Sequential, Pack = 4, Size = 64)]
 public struct Matrix4X3Custom
 {
     /// <summary>
@@ -22,7 +22,7 @@ public struct Matrix4X3Custom
     ///     </c>
     ///     <br />
     ///     <c>
-    ///         unsafe { size = sizeof(Matrix4X3) / sizeof(float); }
+    ///         unsafe { size = sizeof(Matrix4X3Custom) / sizeof(float); }
     ///     </c>
     /// </summary>
     public const int SizeInFloats = 16;
@@ -90,8 +90,10 @@ public struct Matrix4X3Custom
     public float M22;
     public float M23;
 
+    /// <summary> INSTANCE_CUSTOM.r in the shader. </summary>
     public float Emission;
-    public float Custom1;
+    /// <summary> INSTANCE_CUSTOM.g in the shader. </summary>
+    public float Activation;
     public float Custom2;
     public float Custom3;
     #endregion

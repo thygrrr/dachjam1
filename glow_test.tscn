@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bybpqf880sl1t"]
+[gd_scene load_steps=22 format=3 uid="uid://bybpqf880sl1t"]
 
 [ext_resource type="Script" uid="uid://ts62aa2lgsgi" path="res://code/look_at.gd" id="1_abbf7"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="1_eo7j0"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://bqoe8cdhpxjl5" path="res://code/Level.cs" id="5_oeosn"]
 [ext_resource type="PackedScene" uid="uid://sektlfvpvrp0" path="res://levels/level0.tscn" id="6_1kcea"]
 [ext_resource type="Script" uid="uid://dp2muumk5ufvh" path="res://code/Protesters.cs" id="7_oeosn"]
+[ext_resource type="Script" uid="uid://bm6bnk5v80qyh" path="res://code/Passives.cs" id="7_pssvs"]
 [ext_resource type="Material" uid="uid://ceg4rycg7v8my" path="res://shaders/glow_test.tres" id="8_oeosn"]
 [ext_resource type="Texture2D" uid="uid://dql5pwql80ldp" path="res://textures/jamandswoon-logo.png" id="10_1kcea"]
 [ext_resource type="LabelSettings" uid="uid://bpr50gc8rlreu" path="res://fonts/intro.labelsettings.tres" id="12_mlcxa"]
@@ -24,7 +25,6 @@ shader_parameter/roughness = 1.0
 shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
 shader_parameter/specular = 0.5
 shader_parameter/metallic = 0.0
-shader_parameter/emission = Color(0.837501, 0.484983, 0, 1)
 shader_parameter/emission_energy = 5.0
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
 shader_parameter/uv1_offset = Vector3(0, 0, 0)
@@ -61,57 +61,62 @@ shader_parameter/vignette_strength = 1.0
 shader_parameter/dither_strength = 0.03
 shader_parameter/vignette_color = Color(0.246314, 0.275395, 0.327805, 1)
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=971528840]
 
-[node name="Camera Offset" type="Node3D" parent="."]
+[node name="Camera Offset" type="Node3D" parent="." unique_id=1365567024]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 9, 3)
 
-[node name="Camera PitchYaw" type="Node3D" parent="Camera Offset" node_paths=PackedStringArray("target")]
+[node name="Camera PitchYaw" type="Node3D" parent="Camera Offset" unique_id=1136621962 node_paths=PackedStringArray("target")]
 transform = Transform3D(0.742542, 0.5074, -0.437236, 0, 0.652787, 0.757541, 0.669799, -0.562507, 0.484722, 0, 0, 0)
 script = ExtResource("1_abbf7")
 target = NodePath("../../Level/Protesters/Head/Arrow")
 
-[node name="Camera3D" type="Camera3D" parent="Camera Offset/Camera PitchYaw"]
+[node name="Camera3D" type="Camera3D" parent="Camera Offset/Camera PitchYaw" unique_id=6850855]
 transform = Transform3D(1, 0, 5.96046e-08, -2.98023e-08, 1, -1.49012e-08, 2.98023e-08, -1.49012e-08, 1, 0, 0, 0)
 fov = 30.0
 size = 5.0
 near = 5.0
 far = 500.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=669938962]
 environment = ExtResource("1_vpl8t")
 
-[node name="ECS" type="Node" parent="."]
+[node name="ECS" type="Node" parent="." unique_id=414742345]
 script = ExtResource("3_eus8d")
 
-[node name="Level" parent="." instance=ExtResource("6_1kcea")]
+[node name="Level" parent="." unique_id=58127753 instance=ExtResource("6_1kcea")]
 script = ExtResource("5_oeosn")
 
-[node name="Protesters" type="MultiMeshInstance3D" parent="Level"]
+[node name="Protesters" type="MultiMeshInstance3D" parent="Level" unique_id=789506574]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 multimesh = SubResource("MultiMesh_eus8d")
 script = ExtResource("7_oeosn")
 
-[node name="Start" type="MeshInstance3D" parent="Level/Protesters"]
+[node name="Start" type="MeshInstance3D" parent="Level/Protesters" unique_id=630418394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -4.47035e-08, 1)
 mesh = SubResource("TorusMesh_oeosn")
 
-[node name="End" type="MeshInstance3D" parent="Level/Protesters"]
+[node name="End" type="MeshInstance3D" parent="Level/Protesters" unique_id=1602776666]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -4.47035e-08, 1)
 mesh = SubResource("TorusMesh_oeosn")
 
-[node name="Head" type="Node3D" parent="Level/Protesters"]
+[node name="Head" type="Node3D" parent="Level/Protesters" unique_id=1632221139]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
 
-[node name="Arrow" type="MeshInstance3D" parent="Level/Protesters/Head"]
+[node name="Arrow" type="MeshInstance3D" parent="Level/Protesters/Head" unique_id=1228677230]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.59654e-09, 0.0365247)
 mesh = SubResource("PrismMesh_mlcxa")
 skeleton = NodePath("../..")
 
-[node name="graffiti" type="Node3D" parent="."]
+[node name="Passives" type="MultiMeshInstance3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+multimesh = SubResource("MultiMesh_eus8d")
+script = ExtResource("7_pssvs")
+
+[node name="graffiti" type="Node3D" parent="." unique_id=2111007798]
 visible = false
 
-[node name="Label3D2" type="Label3D" parent="graffiti"]
+[node name="Label3D2" type="Label3D" parent="graffiti" unique_id=1512755043]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0815907, 1.14185, -1.35353)
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "all cubes are
@@ -120,7 +125,7 @@ font = ExtResource("3_jqqo2")
 font_size = 64
 outline_size = 2
 
-[node name="Label3D3" type="Label3D" parent="graffiti"]
+[node name="Label3D3" type="Label3D" parent="graffiti" unique_id=329581907]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.81841, 0.0418497, -4.05353)
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
 text = "so distribution should undo excess
@@ -129,7 +134,7 @@ font = ExtResource("3_jqqo2")
 font_size = 64
 outline_size = 2
 
-[node name="Label3D6" type="Label3D" parent="graffiti"]
+[node name="Label3D6" type="Label3D" parent="graffiti" unique_id=744391478]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.91841, 0.54185, 5.94647)
 visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
@@ -139,26 +144,26 @@ font = ExtResource("3_jqqo2")
 font_size = 64
 outline_size = 2
 
-[node name="FillLight" type="DirectionalLight3D" parent="."]
+[node name="FillLight" type="DirectionalLight3D" parent="." unique_id=1452407414]
 transform = Transform3D(0.612373, -0.5, -0.612372, 0.353553, 0.866025, -0.353553, 0.707107, 1.29807e-07, 0.707107, 0, 0, 5)
 light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
 light_energy = 0.2
 light_negative = true
 light_specular = 3.0
 
-[node name="FillLight2" type="DirectionalLight3D" parent="."]
+[node name="FillLight2" type="DirectionalLight3D" parent="." unique_id=2051717072]
 transform = Transform3D(0.55199, 0.545084, 0.631024, 0.72694, -0.685296, -0.0439271, 0.408494, 0.482963, -0.774518, 0, 0, 5)
 light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
 light_energy = 0.2
 light_negative = true
 light_specular = 3.0
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=66823130]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
 visible = false
 mesh = SubResource("BoxMesh_8kfqt")
 
-[node name="Vignette" type="ColorRect" parent="."]
+[node name="Vignette" type="ColorRect" parent="." unique_id=821453323]
 material = SubResource("ShaderMaterial_vpl8t")
 anchors_preset = 15
 anchor_right = 1.0
@@ -166,7 +171,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=935911920]
 visible = false
 offset_left = 157.0
 offset_top = 130.0
@@ -176,7 +181,7 @@ text = "fear not
 		the dark"
 label_settings = ExtResource("12_mlcxa")
 
-[node name="Label2" type="Label" parent="."]
+[node name="Label2" type="Label" parent="." unique_id=506632709]
 visible = false
 offset_left = 626.0
 offset_top = 605.0
@@ -186,7 +191,7 @@ text = "fear the fade"
 label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 2
 
-[node name="Label3" type="Label" parent="."]
+[node name="Label3" type="Label" parent="." unique_id=1741541746]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -198,7 +203,7 @@ label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label4" type="Label" parent="."]
+[node name="Label4" type="Label" parent="." unique_id=1839627206]
 visible = false
 offset_left = 46.0
 offset_top = 52.0
@@ -209,7 +214,7 @@ presents"
 label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 2
 
-[node name="Label5" type="Label" parent="."]
+[node name="Label5" type="Label" parent="." unique_id=2131657349]
 visible = false
 offset_left = 46.0
 offset_top = 52.0
@@ -221,7 +226,7 @@ jam and swoon"
 label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 2
 
-[node name="Label6" type="Label" parent="."]
+[node name="Label6" type="Label" parent="." unique_id=1300571484]
 visible = false
 offset_left = 46.0
 offset_top = 52.0
@@ -234,7 +239,7 @@ karl casey @ white bat audio"
 label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 2
 
-[node name="Label7" type="Label" parent="."]
+[node name="Label7" type="Label" parent="." unique_id=1872053331]
 visible = false
 offset_left = 46.0
 offset_top = 52.0
@@ -248,7 +253,7 @@ powered by fennecs"
 label_settings = ExtResource("12_mlcxa")
 horizontal_alignment = 2
 
-[node name="quote-full" type="Label" parent="."]
+[node name="quote-full" type="Label" parent="." unique_id=1385103255]
 visible = false
 offset_left = 414.0
 offset_top = 365.0
@@ -258,7 +263,7 @@ text = "schweigen kann die
 Grausamste lüge sein"
 label_settings = ExtResource("12_mlcxa")
 
-[node name="quote-grau" type="Label" parent="."]
+[node name="quote-grau" type="Label" parent="." unique_id=1841860605]
 visible = false
 offset_left = 414.0
 offset_top = 365.0
@@ -268,7 +273,7 @@ text = "
 Grau"
 label_settings = ExtResource("12_mlcxa")
 
-[node name="Jamandswoon-logo" type="TextureRect" parent="."]
+[node name="Jamandswoon-logo" type="TextureRect" parent="." unique_id=1347714134]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
