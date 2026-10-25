@@ -26,4 +26,8 @@
     <PropertyGroup>
         <DefaultItemExcludes>$(DefaultItemExcludes);dachjam.repl/**</DefaultItemExcludes>
     </PropertyGroup>
+    <!-- added by the 2dog tool: properties 2dog hosts need that were not already set -->
+    <PropertyGroup>
+        <DefaultItemExcludes>$(DefaultItemExcludes);dachjam.web/**</DefaultItemExcludes>
+    </PropertyGroup>
 </Project>

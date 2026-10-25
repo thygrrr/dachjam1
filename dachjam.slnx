@@ -11,6 +11,10 @@
   <Project Path="dachjam.repl/dachjam.repl.csproj">
     <BuildType Project="Debug" />
   </Project>
+  <Project Path="dachjam.web/dachjam.web.csproj">
+    <BuildType Project="Debug" />
+    <Build Project="false" />
+  </Project>
   <Project Path="dachjam.xunit/dachjam.xunit.csproj">
     <BuildType Project="Debug" />
   </Project>
