@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dj1ufnvowa6p6"]
 
 [ext_resource type="Material" uid="uid://ceg4rycg7v8my" path="res://shaders/glow_test.tres" id="1_glow"]
 
@@ -7,5 +7,5 @@ material = ExtResource("1_glow")
 inner_radius = 0.3
 outer_radius = 0.35
 
-[node name="Marker" type="MeshInstance3D"]
+[node name="Marker" type="MeshInstance3D" unique_id=31136988]
 mesh = SubResource("TorusMesh_marker")

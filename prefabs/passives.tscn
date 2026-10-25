@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://chbj7ukodnpim"]
 
 [ext_resource type="Script" uid="uid://bm6bnk5v80qyh" path="res://code/Passives.cs" id="1_passives"]
-[ext_resource type="MultiMesh" path="res://prefabs/citizens.tres" id="2_citizens"]
+[ext_resource type="MultiMesh" uid="uid://dqven0d3rd38" path="res://prefabs/citizens.tres" id="2_citizens"]
 
-[node name="Passives" type="MultiMeshInstance3D"]
+[node name="Passives" type="MultiMeshInstance3D" unique_id=675477357]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 multimesh = ExtResource("2_citizens")
 script = ExtResource("1_passives")

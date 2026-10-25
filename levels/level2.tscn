@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://4q3g8l6j8q4c"]
 
 [ext_resource type="MeshLibrary" uid="uid://bndms4kmx7nx0" path="res://prefabs/cubes.tres" id="1_cubes"]
 [ext_resource type="Script" uid="uid://bqoe8cdhpxjl5" path="res://code/Level.cs" id="2_level"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://prefabs/stream.tscn" id="4_stream"]
 [ext_resource type="PackedScene" path="res://prefabs/marker.tscn" id="5_marker"]
 
-[node name="Level" type="GridMap"]
+[node name="Level" type="GridMap" unique_id=828617442]
 mesh_library = ExtResource("1_cubes")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -18,22 +18,21 @@ data = {
 script = ExtResource("2_level")
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="Passives" parent="." instance=ExtResource("3_passives")]
+[node name="Passives" parent="." unique_id=1318914494 instance=ExtResource("3_passives")]
 
-[node name="Orange" parent="." instance=ExtResource("4_stream")]
-Tint = Color(0.837501, 0.484983, 0, 1)
+[node name="Orange" parent="." unique_id=454986331 instance=ExtResource("4_stream")]
 
-[node name="Start" parent="Orange" instance=ExtResource("5_marker")]
+[node name="Start" parent="Orange" unique_id=691479136 instance=ExtResource("5_marker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
 
-[node name="End" parent="Orange" instance=ExtResource("5_marker")]
+[node name="End" parent="Orange" unique_id=789917076 instance=ExtResource("5_marker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
 
-[node name="Teal" parent="." instance=ExtResource("4_stream")]
+[node name="Teal" parent="." unique_id=749098518 instance=ExtResource("4_stream")]
 Tint = Color(0, 0.62, 0.68, 1)
 
-[node name="Start" parent="Teal" instance=ExtResource("5_marker")]
+[node name="Start" parent="Teal" unique_id=1623122930 instance=ExtResource("5_marker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 4)
 
-[node name="End" parent="Teal" instance=ExtResource("5_marker")]
+[node name="End" parent="Teal" unique_id=1803614006 instance=ExtResource("5_marker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 2)

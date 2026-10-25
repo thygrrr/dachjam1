@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://c0dpsayukjldy"]
 
-[ext_resource type="Script" path="res://code/interlude.gd" id="1_intlu"]
+[ext_resource type="Script" uid="uid://prjdv7ofeidj" path="res://code/interlude.gd" id="1_intlu"]
 
-[node name="Interlude" type="Control"]
+[node name="Interlude" type="Control" unique_id=731487249]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_intlu")
 
-[node name="Quote" type="Label" parent="."]
+[node name="Quote" type="Label" parent="." unique_id=1625584757]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

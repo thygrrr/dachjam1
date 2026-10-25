@@ -1,4 +1,4 @@
-[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bpr50gc8rlreu"]
+[gd_resource type="LabelSettings" format=3 uid="uid://bpr50gc8rlreu"]
 
 [ext_resource type="FontFile" uid="uid://dm668hyyjb8u5" path="res://fonts/Oranssi hohde.ttf" id="1_lkkli"]
 
