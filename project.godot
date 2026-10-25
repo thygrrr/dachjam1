@@ -93,4 +93,5 @@ anti_aliasing/quality/use_debanding=true
 global_illumination/sdfgi/probe_ray_count=4
 anti_aliasing/quality/use_taa=true
 environment/defaults/default_environment="uid://dnwg1c50c6neh"
-renderer.web/rendering_method="mobile"
+renderer.web/rendering_method="forward_plus"
+
