@@ -8,8 +8,8 @@
     <!-- The package versions every host references. `2dog update` rewrites this block, `2dog doctor` checks it;
          the game project's Godot.NET.Sdk version stays in its csproj (SDK resolution runs before this file). -->
     <PropertyGroup Label="2dog">
-        <TwoDogVersion>4.7.2.140</TwoDogVersion>
-        <TwoDogNativesVersion>4.7.2.53</TwoDogNativesVersion>
+        <TwoDogVersion>4.7.2.141</TwoDogVersion>
+        <TwoDogNativesVersion>4.7.2.54</TwoDogNativesVersion>
         <TwoDogGodotVersion>4.7.2</TwoDogGodotVersion>
         <TwoDogAvaloniaVersion>12.1.1</TwoDogAvaloniaVersion>
         <TwoDogMauiVersion>10.0.110</TwoDogMauiVersion>

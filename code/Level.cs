@@ -141,13 +141,13 @@ public partial class Level : GridMap
         stream.MoveHead(trail.Head, trail.Cells.Count > 1 ? trail.Head - trail.Cells[^2] : Vector3I.Zero);
     }
 
-    // Input is rotated to match the camera.
+    // Input is rotated to match the camera. Key-repeat echoes are ignored: one step per press.
     private static Vector3I? Steering(InputEvent ev)
     {
-        if (ev.IsActionPressed("ui_up", true)) return Vector3I.Right;
-        if (ev.IsActionPressed("ui_down", true)) return Vector3I.Left;
-        if (ev.IsActionPressed("ui_left", true)) return Vector3I.Forward;
-        if (ev.IsActionPressed("ui_right", true)) return Vector3I.Back;
+        if (ev.IsActionPressed("ui_up")) return Vector3I.Right;
+        if (ev.IsActionPressed("ui_down")) return Vector3I.Left;
+        if (ev.IsActionPressed("ui_left")) return Vector3I.Forward;
+        if (ev.IsActionPressed("ui_right")) return Vector3I.Back;
         return null;
     }
 
