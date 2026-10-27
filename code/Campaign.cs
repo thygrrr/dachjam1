@@ -28,6 +28,28 @@ public partial class Campaign : Node3D
     public int Index { get; private set; } = -1;
     public float ThickFog { get; private set; }
 
+    /// <summary>
+    ///     Glow settings for the Mobile renderer. Its 10-bit color buffer clamps HDR at twice white, so the emissive
+    ///     overshoot that drives the halo on Forward+ is mostly gone before the glow pass; a zero threshold with more
+    ///     strength and bloom brings the halo back to a similar size. Tuned by eye on Vulkan and WebGPU Mobile.
+    /// </summary>
+    public const float MobileGlowHdrThreshold = 0;
+    public const float MobileGlowStrength = 1.2f;
+    public const float MobileGlowBloom = 0.6f;
+
+    /// <summary>
+    ///     Classic fog standing in for the volumetric fog on renderers without it (Mobile, Compatibility). The
+    ///     volumetric fog fills the streets between the blocks, so an exponential depth fog carries the fade and a
+    ///     height fog below the block tops keeps the streets hazier than the roofs. Densities are the volumetric
+    ///     density times <see cref="FallbackFogDensityScale"/>; the camera sits about 8 units from the board.
+    /// </summary>
+    public const float FallbackFogDensityScale = 0.5f;
+    public const float FallbackFogHeight = 2f;
+    public const float FallbackFogHeightDensity = 1f;
+
+    /// <summary>Whether the fades drive the volumetric fog (Forward+) or the classic fallback fog.</summary>
+    public bool VolumetricFog { get; private set; } = true;
+
     private Environment _fog;
     private Tween _fade;
 
@@ -38,7 +60,49 @@ public partial class Campaign : Node3D
         // A copy, so fading the fog never changes the shared resource.
         _fog = World.Environment = (Environment) World.Environment.Duplicate();
         ThickFog = _fog.VolumetricFogDensity;
+        var method = RenderingServer.GetCurrentRenderingMethod();
+        TuneGlow(_fog, method);
+        VolumetricFog = TuneFog(_fog, method);
         Load(0);
+    }
+
+    /// <summary>
+    ///     Applies the renderer-specific glow settings; see <see cref="MobileGlowHdrThreshold"/>. Forward+ and
+    ///     Compatibility keep the environment's own values.
+    /// </summary>
+    public static void TuneGlow(Environment environment, string renderingMethod)
+    {
+        if (renderingMethod != "mobile") return;
+        environment.GlowHdrThreshold = MobileGlowHdrThreshold;
+        environment.GlowStrength = MobileGlowStrength;
+        environment.GlowBloom = MobileGlowBloom;
+    }
+
+    /// <summary>
+    ///     Keeps the volumetric fog on Forward+ (returns true); elsewhere swaps it for the classic fallback fog in the
+    ///     volumetric fog's color and returns false. The density is set separately, see <see cref="SetFogDensity"/>.
+    /// </summary>
+    public static bool TuneFog(Environment environment, string renderingMethod)
+    {
+        if (renderingMethod == "forward_plus") return true;
+        environment.VolumetricFogEnabled = false;
+        environment.FogEnabled = true;
+        environment.FogMode = Environment.FogModeEnum.Exponential;
+        environment.FogLightColor = environment.VolumetricFogAlbedo;
+        environment.FogLightEnergy = 1;
+        environment.FogSunScatter = 0;
+        environment.FogAerialPerspective = 0;
+        environment.FogSkyAffect = 1;
+        environment.FogHeight = FallbackFogHeight;
+        environment.FogHeightDensity = FallbackFogHeightDensity;
+        return false;
+    }
+
+    /// <summary>Applies a volumetric fog density, scaled for the fallback fog where that is in use.</summary>
+    public static void SetFogDensity(Environment environment, bool volumetric, float density)
+    {
+        if (volumetric) environment.VolumetricFogDensity = density;
+        else environment.FogDensity = density * FallbackFogDensityScale;
     }
 
     /// <summary>
@@ -54,7 +118,7 @@ public partial class Campaign : Node3D
 
         foreach (var interlude in Stage.GetChildren()) interlude.QueueFree();
         _fade?.Kill();
-        _fog.VolumetricFogDensity = ThickFog;
+        SetFogDensity(_fog, VolumetricFog, ThickFog);
 
         Index = index;
         Current = Levels[index].Instantiate<Level>();
@@ -114,7 +178,9 @@ public partial class Campaign : Node3D
     {
         _fade?.Kill();
         _fade = CreateTween();
-        _fade.TweenProperty(_fog, "volumetric_fog_density", density, FogTime)
+        var property = VolumetricFog ? "volumetric_fog_density" : "fog_density";
+        var target = VolumetricFog ? density : density * FallbackFogDensityScale;
+        _fade.TweenProperty(_fog, property, target, FogTime)
             .SetTrans(Tween.TransitionType.Expo).SetEase(ease);
         await ToSignal(_fade, Tween.SignalName.Finished);
     }

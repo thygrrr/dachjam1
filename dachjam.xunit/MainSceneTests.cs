@@ -217,6 +217,44 @@ public sealed class MainSceneTests : IDisposable
     }
 
     [Fact]
+    public void Glow_IsRetunedForMobile_AndLeftAloneElsewhere()
+    {
+        var resource = GD.Load<Godot.Environment>(WorldEnvironment);
+        var environment = (Godot.Environment) resource.Duplicate();
+
+        jam.Campaign.TuneGlow(environment, "forward_plus");
+        Assert.Equal(resource.GlowHdrThreshold, environment.GlowHdrThreshold);
+        Assert.Equal(resource.GlowStrength, environment.GlowStrength);
+
+        jam.Campaign.TuneGlow(environment, "mobile");
+        Assert.Equal(jam.Campaign.MobileGlowHdrThreshold, environment.GlowHdrThreshold);
+        Assert.Equal(jam.Campaign.MobileGlowStrength, environment.GlowStrength);
+        Assert.Equal(jam.Campaign.MobileGlowBloom, environment.GlowBloom);
+        Assert.Equal(resource.GlowHdrThreshold, GD.Load<Godot.Environment>(WorldEnvironment).GlowHdrThreshold);
+    }
+
+    [Fact]
+    public void Fog_FallsBackToClassicFog_WithoutVolumetricFog()
+    {
+        var resource = GD.Load<Godot.Environment>(WorldEnvironment);
+        var environment = (Godot.Environment) resource.Duplicate();
+
+        Assert.True(jam.Campaign.TuneFog(environment, "forward_plus"));
+        Assert.True(environment.VolumetricFogEnabled);
+        Assert.False(environment.FogEnabled);
+
+        Assert.False(jam.Campaign.TuneFog(environment, "mobile"));
+        Assert.False(environment.VolumetricFogEnabled);
+        Assert.True(environment.FogEnabled);
+        Assert.Equal(resource.VolumetricFogAlbedo, environment.FogLightColor);
+        Assert.Equal(jam.Campaign.FallbackFogHeight, environment.FogHeight);
+
+        jam.Campaign.SetFogDensity(environment, false, Campaign.PlayFog);
+        Assert.Equal(Campaign.PlayFog * jam.Campaign.FallbackFogDensityScale, environment.FogDensity, 0.0001f);
+        Assert.True(resource.VolumetricFogEnabled);
+    }
+
+    [Fact]
     public void Interludes_SandwichEachLevel()
     {
         Campaign.AdvanceDelay = 0.01;
