@@ -62,7 +62,8 @@ public partial class Passives : CitizenRenderer
 
     protected override void Animate(float time, float delta)
     {
-        _cubes.Job((time, delta), static ((float time, float delta) uniform,
+        // Must be for for web builds, who can't do Job.
+        _cubes.For((time, delta), static ((float time, float delta) uniform,
             ref Citizen citizen, ref Startle startle, ref Matrix4X3Custom matrix) =>
         {
             var position = CitizenMotion.Wander(citizen, uniform.time)

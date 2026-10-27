@@ -128,7 +128,8 @@ public partial class Protesters : CitizenRenderer
     {
         var celebration = float.IsNaN(_celebratedAt) ? -1 : time - _celebratedAt;
 
-        _cubes.Job((time, delta, celebration), static ((float time, float delta, float celebration) uniform,
+        // Must be for for web builds, who can't do Job.
+        _cubes.For((time, delta, celebration), static ((float time, float delta, float celebration) uniform,
             ref Citizen citizen, ref Flow flow, ref Activation activation, ref Startle startle, ref Matrix4X3Custom matrix) =>
         {
             flow.Out = Vector3.Lerp(flow.Out, flow.OutGoal, 1 - MathF.Exp(-uniform.delta * SteerSharpness));

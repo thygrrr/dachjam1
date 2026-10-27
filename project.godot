@@ -83,6 +83,7 @@ restart={
 
 [rendering]
 
+renderer/rendering_method.web="forward_plus"
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=3
 global_illumination/voxel_gi/quality=1
@@ -93,5 +94,3 @@ anti_aliasing/quality/use_debanding=true
 global_illumination/sdfgi/probe_ray_count=4
 anti_aliasing/quality/use_taa=true
 environment/defaults/default_environment="uid://dnwg1c50c6neh"
-renderer.web/rendering_method="forward_plus"
-
