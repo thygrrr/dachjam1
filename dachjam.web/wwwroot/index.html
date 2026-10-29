@@ -44,15 +44,25 @@
             border: 0;
         }
 
+        /* Matches the in-game vignette color; the page around the square
+           canvas is the letterbox. */
+        :root {
+            --grau: #363d49;
+        }
+
         body {
             color: white;
-            background-color: black;
+            background-color: var(--grau);
             overflow: hidden;
             touch-action: none;
         }
 
+        /* Sized to a centered square by fitCanvas(). */
         #canvas {
             display: block;
+            position: absolute;
+            inset: 0;
+            margin: auto;
         }
 
         #canvas:focus {
@@ -68,14 +78,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #242424;
+            background-color: var(--grau);
             font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
         }
 
         #status {
             position: absolute;
             inset: 0;
-            background-color: #242424;
+            background-color: var(--grau);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -180,11 +190,29 @@
         <div id="status-notice" role="alert"></div>
     </div>
 
+    <script>
+        // The game view is square. Godot letterboxes in hard-coded black, so the
+        // canvas is kept square itself (canvasResizePolicy 0 leaves it to us) and
+        // the page background shows around it.
+        (function () {
+            const canvas = document.getElementById('canvas');
+            function fitCanvas() {
+                const size = Math.floor(Math.min(window.innerWidth, window.innerHeight));
+                const pixels = Math.floor(size * (window.devicePixelRatio || 1));
+                canvas.style.width = canvas.style.height = `${size}px`;
+                if (canvas.width !== pixels || canvas.height !== pixels) {
+                    canvas.width = canvas.height = pixels;
+                }
+            }
+            fitCanvas();
+            window.addEventListener('resize', fitCanvas);
+        }());
+    </script>
     <script src="godot.js"></script>
     <script>
         const GODOT_CONFIG = {
             'args': [],
-            'canvasResizePolicy': 2,
+            'canvasResizePolicy': 0,
             'ensureCrossOriginIsolationHeaders': false,
             'executable': 'godot',
             'experimentalVK': false,

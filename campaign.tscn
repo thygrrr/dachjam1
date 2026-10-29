@@ -19,9 +19,9 @@ size = Vector3(100, 1, 100)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_38rmy"]
 shader = ExtResource("12_v85b1")
-shader_parameter/inner_radius = 0.2
+shader_parameter/inner_radius = 0.5
 shader_parameter/outer_radius = 1.0
-shader_parameter/vignette_strength = 2.0
+shader_parameter/vignette_strength = 1.0
 shader_parameter/dither_strength = 0.03
 shader_parameter/vignette_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 

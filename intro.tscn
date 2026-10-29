@@ -7,8 +7,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vpl8t"]
 shader = ExtResource("12_nt247")
-shader_parameter/inner_radius = 0.1
-shader_parameter/outer_radius = 1.5
+shader_parameter/inner_radius = 0.2
+shader_parameter/outer_radius = 1.0
 shader_parameter/vignette_strength = 1.0
 shader_parameter/dither_strength = 0.03
 shader_parameter/vignette_color = Color(0.21360692, 0.23830244, 0.2877062, 1)
