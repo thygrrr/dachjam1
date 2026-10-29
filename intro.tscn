@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://bybpqf880sl1t"]
+
+[ext_resource type="FontFile" uid="uid://cgefhc807lybu" path="res://fonts/Terminal_Square/Bold/terminal-square-bold.ttf" id="3_0a7ni"]
+[ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="12_nt247"]
+[ext_resource type="LabelSettings" uid="uid://bpr50gc8rlreu" path="res://fonts/intro.labelsettings.tres" id="13_7dpha"]
+[ext_resource type="Texture2D" uid="uid://dql5pwql80ldp" path="res://textures/jamandswoon-logo.png" id="14_ufrnv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vpl8t"]
+shader = ExtResource("12_nt247")
+shader_parameter/inner_radius = 0.1
+shader_parameter/outer_radius = 1.5
+shader_parameter/vignette_strength = 1.0
+shader_parameter/dither_strength = 0.03
+shader_parameter/vignette_color = Color(0.21360692, 0.23830244, 0.2877062, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7jktm"]
+font = ExtResource("3_0a7ni")
+font_size = 40
+
+[node name="Node3D" type="Node3D" unique_id=971528840]
+
+[node name="Vignette" type="ColorRect" parent="." unique_id=821453323]
+visible = false
+material = SubResource("ShaderMaterial_vpl8t")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="." unique_id=935911920]
+visible = false
+offset_left = 157.0
+offset_top = 130.0
+offset_right = 1381.0
+offset_bottom = 310.0
+text = "In the Dark, 
+there is Discovery.
+there is Possibility."
+label_settings = ExtResource("13_7dpha")
+
+[node name="Label1" type="Label" parent="." unique_id=1797099478]
+visible = false
+offset_left = 157.0
+offset_top = 130.0
+offset_right = 1381.0
+offset_bottom = 310.0
+text = "... there is 
+Freedom in the Dark
+once someone has
+illuminated it."
+label_settings = ExtResource("13_7dpha")
+
+[node name="Label4" type="Label" parent="." unique_id=1839627206]
+visible = false
+offset_left = 46.0
+offset_top = 52.0
+offset_right = 1486.0
+offset_bottom = 328.0
+text = "outfox
+presents"
+label_settings = ExtResource("13_7dpha")
+horizontal_alignment = 2
+
+[node name="Label5" type="Label" parent="." unique_id=2131657349]
+visible = false
+offset_left = 46.0
+offset_top = 52.0
+offset_right = 1486.0
+offset_bottom = 328.0
+text = "
+a production by
+jam and swoon"
+label_settings = ExtResource("13_7dpha")
+horizontal_alignment = 2
+
+[node name="Label6" type="Label" parent="." unique_id=1300571484]
+visible = false
+offset_left = 46.0
+offset_top = 52.0
+offset_right = 1486.0
+offset_bottom = 541.0
+text = "
+
+with music by
+karl casey @ white bat audio"
+label_settings = ExtResource("13_7dpha")
+horizontal_alignment = 2
+
+[node name="Label7" type="Label" parent="." unique_id=1872053331]
+visible = false
+offset_left = 46.0
+offset_top = 52.0
+offset_right = 1486.0
+offset_bottom = 541.0
+text = "
+
+
+made in godot
+built with 2dog
+powered by fennecs
+"
+label_settings = ExtResource("13_7dpha")
+horizontal_alignment = 2
+
+[node name="quote-grau" type="Label" parent="." unique_id=1841860605]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -653.0
+offset_top = -234.0
+offset_right = 787.0
+offset_bottom = 127.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "
+grau"
+label_settings = ExtResource("13_7dpha")
+
+[node name="quote-full" type="Label" parent="quote-grau" unique_id=1385103255]
+layout_mode = 1
+offset_right = 1393.0
+offset_bottom = 361.0
+text = "Schweigen kann die 
+grausamste Lüge sein"
+label_settings = ExtResource("13_7dpha")
+
+[node name="quote-author" type="Label" parent="quote-grau" unique_id=1291853461]
+layout_mode = 1
+offset_right = 1285.0
+offset_bottom = 361.0
+text = "R. L. Stevenson"
+label_settings = SubResource("LabelSettings_7jktm")
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="quote-exe" type="Label" parent="quote-grau" unique_id=1255920718]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -720.0
+offset_top = -180.5
+offset_right = 612.0
+offset_bottom = 180.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "
+grau.exe"
+label_settings = ExtResource("13_7dpha")
+
+[node name="Jamandswoon-logo" type="TextureRect" parent="." unique_id=1347714134]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -512.0
+offset_right = 512.0
+offset_bottom = 512.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_ufrnv")

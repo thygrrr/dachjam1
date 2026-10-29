@@ -6,6 +6,7 @@ ambient_light_color = Color(0.392157, 0.431373, 0.501961, 1)
 ambient_light_energy = 0.5
 tonemap_mode = 2
 ssil_enabled = true
+ssil_radius = 8.0
 ssil_intensity = 5.0
 ssil_sharpness = 0.8
 ssil_normal_rejection = 0.5
