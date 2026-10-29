@@ -22,7 +22,7 @@ DebugMenu="*uid://cggqb75a8w8r"
 
 [display]
 
-window/size/viewport_width=1600
+window/size/viewport_width=800
 window/size/viewport_height=800
 window/size/initial_position_type=3
 window/size/extend_to_title=true
@@ -89,8 +89,8 @@ lights_and_shadows/positional_shadow/soft_shadow_filter_quality=3
 global_illumination/voxel_gi/quality=1
 environment/ssil/quality=4
 environment/ssil/blur_passes=6
+anti_aliasing/quality/msaa_3d=2
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 anti_aliasing/quality/use_debanding=true
 global_illumination/sdfgi/probe_ray_count=4
-anti_aliasing/quality/use_taa=true
 environment/defaults/default_environment="uid://dnwg1c50c6neh"
