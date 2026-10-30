@@ -39,4 +39,29 @@ public class LevelTests(HeadlessFixture godot)
             finally { level.Free(); }
         }
     }
+
+    [Fact]
+    public void EveryPretext_HidesTheBoardBehindGrau()
+    {
+        var grau = ProjectSettings.GetSetting("rendering/environment/defaults/default_clear_color").AsColor();
+        foreach (var scene in CampaignLevels())
+        {
+            var level = scene.Instantiate<Level>();
+            var pretext = level.Pretext?.Instantiate<Control>();
+            try
+            {
+                Assert.True(pretext is not null, $"{scene.ResourcePath} has no pretext.");
+                var background = pretext.GetNode<ColorRect>("Background");
+                Assert.Equal(grau, background.Color);
+                Assert.Equal(new Vector4(0, 0, 1, 1),
+                    new Vector4(background.AnchorLeft, background.AnchorTop, background.AnchorRight, background.AnchorBottom));
+                Assert.True(background.GetIndex() < pretext.GetNode("Quote").GetIndex(), "The background covers the text.");
+            }
+            finally
+            {
+                pretext?.Free();
+                level.Free();
+            }
+        }
+    }
 }

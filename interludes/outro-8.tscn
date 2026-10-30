@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://fbrp58or2786"]
 
 [ext_resource type="PackedScene" uid="uid://c0dpsayukjldy" path="res://interludes/interlude.tscn" id="1_interlude"]
 [ext_resource type="LabelSettings" uid="uid://bpr50gc8rlreu" path="res://fonts/intro.labelsettings.tres" id="2_settings"]
@@ -7,6 +7,6 @@
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
 text = "Die Stadt
-gehört wieder
+gehört
 uns allen."
 label_settings = ExtResource("2_settings")
