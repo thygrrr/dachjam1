@@ -7,6 +7,6 @@
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
 text = "Ich schritt
-aus der 
-Stille...."
+durch den 
+Nebel..."
 label_settings = ExtResource("2_h4akw")

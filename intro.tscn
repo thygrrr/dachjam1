@@ -53,7 +53,7 @@ alignment = 1
 
 [node name="quote-full" type="Label" parent="quote" unique_id=1385103255]
 layout_mode = 2
-text = "Schweigen kann die grausamste Lüge sein"
+text = "Schweigen kann die grausamste Lüge sein."
 label_settings = ExtResource("13_7dpha")
 autowrap_mode = 3
 
