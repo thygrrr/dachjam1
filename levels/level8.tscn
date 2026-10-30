@@ -48,6 +48,9 @@ Tint = Color(0.82, 0.12, 0.25, 1)
 [node name="Start" parent="Crimson" unique_id=214863091 instance=ExtResource("5_marker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 10)
 
+[node name="End" parent="Crimson" unique_id=1734259018 instance=ExtResource("5_marker")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 12)
+
 [node name="Lime" parent="." unique_id=2041808738 instance=ExtResource("4_stream")]
 Tint = Color(0.45, 0.78, 0.12, 1)
 

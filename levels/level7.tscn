@@ -65,3 +65,6 @@ Tint = Color(0.55, 0.3, 0.92, 1)
 
 [node name="Start" parent="Violet" unique_id=525326823 instance=ExtResource("5_marker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="End" parent="Violet" unique_id=1290455136 instance=ExtResource("5_marker")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
