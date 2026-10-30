@@ -34,7 +34,7 @@ public class LevelTests(HeadlessFixture godot)
                 var puzzle = new Puzzle(level.Puzzle.Board,
                     level.Puzzle.Trails.Select(trail => new TrailSpec(trail.Start, trail.End)));
 
-                Assert.True(Solver.CountSolutions(puzzle) > 0, $"{scene.ResourcePath} has no solution.");
+                Assert.True(Solver.CountSolutions(puzzle, cap: 1) > 0, $"{scene.ResourcePath} has no solution.");
             }
             finally { level.Free(); }
         }

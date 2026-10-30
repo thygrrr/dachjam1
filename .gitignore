@@ -3,6 +3,9 @@
 build/
 .idea/
 
+*.TMP
+*.tmp
+
 # Build outputs
 bin/
 obj/

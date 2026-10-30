@@ -31,7 +31,7 @@ internal static class Solver
                 if (trail.End is not null) return;
             }
 
-            if (!FreeCellsReachable(puzzle, index)) return;
+            if (!FreeCellsReachable(puzzle, index) || HasDeadEnd(puzzle, index)) return;
 
             foreach (var direction in Board.Directions)
             {
@@ -60,5 +60,29 @@ internal static class Solver
         }
 
         return reached.Count == free.Count;
+    }
+
+    // Every free cell joins a trail through two neighbors: free cells, or the heads of this and later trails, unless it
+    // is a trail's end. Only as many cells as there are open-ended trails left can make do with one, by ending one.
+    private static bool HasDeadEnd(Puzzle puzzle, int index)
+    {
+        var later = puzzle.Trails.Skip(index).ToList();
+        var heads = later.ToDictionary(trail => trail.Head);
+        var free = puzzle.Board.Cells.Except(puzzle.Trails.SelectMany(trail => trail.Cells)).ToHashSet();
+        var openEnds = later.Count(trail => trail.End is null);
+        var loose = 0;
+
+        foreach (var cell in free)
+        {
+            var endOf = puzzle.Trails.FirstOrDefault(trail => trail.End == cell);
+            var joins = Board.Directions.Select(direction => cell + direction).Count(neighbor =>
+                free.Contains(neighbor)
+                || heads.TryGetValue(neighbor, out var trail) && (endOf is null || endOf == trail));
+
+            if (joins == 0) return true;
+            if (joins == 1 && endOf is null && ++loose > openEnds) return true;
+        }
+
+        return false;
     }
 }

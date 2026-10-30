@@ -1,2 +1,4 @@
 # Keep bundled libraries, generated sources and UIDs visible to Git.
 !*
+*.tmp
+*.TMP

@@ -10,6 +10,10 @@
 [ext_resource type="PackedScene" uid="uid://4q3g8l6j8q4c" path="res://levels/level2.tscn" id="8_celeg"]
 [ext_resource type="PackedScene" uid="uid://ccc38aeaf1fm1" path="res://levels/level3.tscn" id="9_y72xh"]
 [ext_resource type="PackedScene" uid="uid://dyh4uajw82qbm" path="res://levels/level4.tscn" id="10_g2nxa"]
+[ext_resource type="PackedScene" path="res://levels/level5.tscn" id="level5"]
+[ext_resource type="PackedScene" path="res://levels/level6.tscn" id="level6"]
+[ext_resource type="PackedScene" path="res://levels/level7.tscn" id="level7"]
+[ext_resource type="PackedScene" path="res://levels/level8.tscn" id="level8"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="11_adary"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="12_v85b1"]
 
@@ -68,7 +72,7 @@ outline_size = 2
 
 [node name="Campaign" type="Node3D" parent="." unique_id=1088291254 node_paths=PackedStringArray("CameraRig", "Focus", "World", "Stage")]
 script = ExtResource("5_a8qaw")
-Levels = [ExtResource("6_14cdb"), ExtResource("7_5bbjr"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa")]
+Levels = [ExtResource("6_14cdb"), ExtResource("7_5bbjr"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa"), ExtResource("level5"), ExtResource("level6"), ExtResource("level7"), ExtResource("level8")]
 CameraRig = NodePath("../Camera Rig")
 Focus = NodePath("../Focus")
 World = NodePath("../WorldEnvironment")

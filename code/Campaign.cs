@@ -10,8 +10,9 @@ namespace jam;
 ///     returns. Between levels the fog is <see cref="ThickFog"/>, hiding the board entirely; for play it clears to
 ///     <see cref="PlayFog"/>, the environment's own density. Interludes are scenes shown on <see cref="Stage"/>; the
 ///     campaign waits until they free themselves (see <c>code/interlude.gd</c>).
-///     Keeps the camera rig over the current level and the camera focus on its selected stream. Once a level is solved,
-///     the camera rises to look straight down on the whole board, see <see cref="Overview"/>.
+///     Keeps the camera rig over the current level and the camera focus on its selected stream; on boards wider than
+///     <see cref="StillRadius"/>, the rig follows the selected stream too. Once a level is solved, the camera rises to
+///     look straight down on the whole board, see <see cref="Overview"/>.
 /// </summary>
 public partial class Campaign : Node3D
 {
@@ -32,6 +33,12 @@ public partial class Campaign : Node3D
 
     /// <summary>Space left around the board in the overview, as a factor of its radius.</summary>
     [Export] public float OverviewMargin { get; set; } = 1.2f;
+
+    /// <summary>
+    ///     Boards within this radius keep the camera rig at their center. On larger ones, the rig follows the selected
+    ///     stream, up to the board's radius less this much from the center.
+    /// </summary>
+    [Export] public float StillRadius { get; set; } = 4.5f;
 
     public Level Current { get; private set; }
     public int Index { get; private set; } = -1;
@@ -122,9 +129,21 @@ public partial class Campaign : Node3D
         Current.Locked = true;
         AddChild(Current);
 
-        CameraRig.GlobalPosition = Current.Center;
+        CameraRig.GlobalPosition = Rig();
         Focus.GlobalPosition = Current.SelectedHead.GlobalPosition;
         Run(Current);
+    }
+
+    // Cheat: keys 1 to 9 load levels 0 to 8, even during interludes.
+    public override void _Input(InputEvent ev)
+    {
+        if (ev is not InputEventKey { Pressed: true, Echo: false } key) return;
+
+        var index = key.Keycode - Key.Key1;
+        if (index < 0 || index > 8 || index >= Levels.Length) return;
+
+        Load((int) index);
+        GetViewport().SetInputAsHandled();
     }
 
     public override void _Process(double delta)
@@ -132,10 +151,19 @@ public partial class Campaign : Node3D
         base._Process(delta);
 
         var t = 1 - Mathf.Exp(-(float) delta * CameraSharpness);
-        CameraRig.GlobalPosition = CameraRig.GlobalPosition.Lerp(Current.Center, t);
+        CameraRig.GlobalPosition = CameraRig.GlobalPosition.Lerp(Rig(), t);
         var focus = Current.SelectedHead.GlobalPosition.Lerp(Current.Center, Overview);
         Focus.GlobalPosition = Focus.GlobalPosition.Lerp(focus, t);
         if (Overview > 0) _arm.Position = Arm(_rest, OverviewHeight(), Overview);
+    }
+
+    // Where the camera rig belongs: towards the selected stream on large boards, back to the center for the overview.
+    private Godot.Vector3 Rig()
+    {
+        var center = Current.Center;
+        var offset = (Current.SelectedHead.GlobalPosition - center) with { Y = 0 };
+        var rig = center + offset.LimitLength(Mathf.Max(0, Current.Radius - StillRadius));
+        return rig.Lerp(center, Overview);
     }
 
     /// <summary>
