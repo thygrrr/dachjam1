@@ -15,6 +15,7 @@ config/tags=PackedStringArray("game")
 run/main_scene="uid://bybpqf880sl1t"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 boot_splash/bg_color=Color(0.21176471, 0.23921569, 0.28627452, 1)
+boot_splash/image="uid://dql5pwql80ldp"
 config/icon="res://icon.svg"
 
 [autoload]
