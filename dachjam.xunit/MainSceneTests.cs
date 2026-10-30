@@ -306,11 +306,9 @@ public sealed class MainSceneTests : IDisposable
 
         var intro = Showing("Intro");
         Assert.Equal(Campaign.PlayFog, Fog.FogDensity, 0.001f);
-        Assert.True(Level.Locked);
-        intro.QueueFree();
-
-        Unlocked();
+        Assert.False(Level.Locked);
         SolveLevel0();
+        intro.QueueFree();
 
         var outro = Showing("Outro");
         Assert.Equal(Campaign.PlayFog, Fog.FogDensity, 0.001f);
@@ -319,6 +317,21 @@ public sealed class MainSceneTests : IDisposable
         Showing("Pretext");
         Assert.Equal(1, Campaign.Index);
         Assert.Equal(Campaign.ThickFog, Fog.FogDensity);
+    }
+
+    [Fact]
+    public void Intro_PlaysOverTheLevel_UntilItIsSolved()
+    {
+        Unlocked();
+        var intro = Showing("Interlude");
+
+        PressKey(Key.Space);
+        Frames(2);
+        Assert.True(GodotObject.IsInstanceValid(intro), "Space skipped the intro instead of reaching the level.");
+
+        SolveLevel0();
+        Assert.True(Level.Puzzle.IsSolved);
+        Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(intro)), "The intro outlived the level.");
     }
 
     [Fact]

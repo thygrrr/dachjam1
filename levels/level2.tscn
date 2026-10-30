@@ -5,6 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://chbj7ukodnpim" path="res://prefabs/passives.tscn" id="3_passives"]
 [ext_resource type="PackedScene" uid="uid://ookpruwtpqbw" path="res://prefabs/stream.tscn" id="4_stream"]
 [ext_resource type="PackedScene" uid="uid://dj1ufnvowa6p6" path="res://prefabs/marker.tscn" id="5_marker"]
+[ext_resource type="PackedScene" path="res://interludes/pretext-2.tscn" id="pretext_2"]
+[ext_resource type="PackedScene" path="res://interludes/intro-2.tscn" id="intro_2"]
+[ext_resource type="PackedScene" path="res://interludes/outro-2.tscn" id="outro_2"]
 
 [node name="Level" type="GridMap" unique_id=828617442]
 mesh_library = ExtResource("1_cubes")
@@ -16,6 +19,9 @@ data = {
 "cells": PackedInt32Array(0, 0, 1, 1, 0, 4, 2, 0, 4, 3, 0, 4, 4, 0, 4, 5, 0, 4, 6, 0, 1, 0, 1, 0, 6, 1, 0, 0, 2, 0, 6, 2, 0, 0, 3, 4, 2, 3, 0, 4, 3, 0, 6, 3, 2, 0, 4, 4, 6, 4, 4, 0, 5, 0, 1, 5, 0, 2, 5, 0, 3, 5, 2, 4, 5, 4, 5, 5, 4, 6, 5, 4, 7, 2, 2, 2, 65535, 2, 5, 65534, 2, 5, 65535, 2, 4, 65535, 2, 4, 65534, 2)
 }
 script = ExtResource("2_level")
+Pretext = ExtResource("pretext_2")
+Intro = ExtResource("intro_2")
+Outro = ExtResource("outro_2")
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
 [node name="Passives" parent="." unique_id=1318914494 instance=ExtResource("3_passives")]

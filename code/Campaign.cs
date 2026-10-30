@@ -6,10 +6,11 @@ using tweens.gd;
 namespace jam;
 
 /// <summary>
-///     Plays the levels in order, each sandwiched between its interludes: pretext, fog clears, intro, play, outro, fog
-///     returns. Between levels the fog is <see cref="ThickFog"/>, hiding the board entirely; for play it clears to
-///     <see cref="PlayFog"/>, the environment's own density. Interludes are scenes shown on <see cref="Stage"/>; the
-///     campaign waits until they free themselves (see <c>code/interlude.gd</c>).
+///     Plays the levels in order, each sandwiched between its interludes: pretext, fog clears, play with the intro playing
+///     over its start, outro, fog returns. Between levels the fog is <see cref="ThickFog"/>, hiding the board entirely;
+///     for play it clears to <see cref="PlayFog"/>, the environment's own density. Interludes are scenes shown on
+///     <see cref="Stage"/>; the campaign waits until they free themselves (see <c>code/interlude.gd</c>), except for the
+///     intro, which leaves input to the level and is cut short once the level is solved.
 ///     Keeps the camera rig over the current level and the camera focus on its selected stream; on boards wider than
 ///     <see cref="StillRadius"/>, the rig follows the selected stream too. Once a level is solved, the camera rises to
 ///     look straight down on the whole board, see <see cref="Overview"/>.
@@ -200,15 +201,35 @@ public partial class Campaign : Node3D
     {
         yield return Show(level.Pretext);
         yield return Fade(PlayFog);
-        yield return Show(level.Intro);
         level.Locked = false;
+        Overlay(level.Intro);
 
         yield return Solved(level);
+        Dismiss();
         Rise();
         yield return Wait(AdvanceDelay);
         yield return Show(level.Outro);
         yield return Fade(ThickFog);
         if (Index + 1 < Levels.Length) Load(Index + 1);
+    }
+
+    // Not awaited: the interlude plays over the level, leaving all input to it.
+    private void Overlay(PackedScene interlude)
+    {
+        if (interlude is null) return;
+
+        var node = interlude.Instantiate();
+        Stage.AddChild(node);
+        node.SetProcessUnhandledInput(false);
+    }
+
+    // Cuts short the interludes still playing, see code/interlude.gd.
+    private void Dismiss()
+    {
+        foreach (var interlude in Stage.GetChildren())
+        {
+            if (interlude.HasMethod("skip")) interlude.Call("skip");
+        }
     }
 
     private async Task Show(PackedScene interlude)

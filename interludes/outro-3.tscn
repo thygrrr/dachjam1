@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://c0dpsayukjldy" path="res://interludes/interlude.tscn" id="1_interlude"]
+[ext_resource type="LabelSettings" uid="uid://bpr50gc8rlreu" path="res://fonts/intro.labelsettings.tres" id="2_settings"]
+
+[node name="Interlude" unique_id=731487249 instance=ExtResource("1_interlude")]
+
+[node name="Quote" parent="." index="0" unique_id=1625584757]
+text = "Und finden ihn
+überall."
+label_settings = ExtResource("2_settings")
