@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://b6s72g1i06q4i" path="res://interludes/pretext-0.tscn" id="3_p8yh6"]
 [ext_resource type="PackedScene" uid="uid://chbj7ukodnpim" path="res://prefabs/passives.tscn" id="3_passives"]
 [ext_resource type="PackedScene" uid="uid://ookpruwtpqbw" path="res://prefabs/stream.tscn" id="4_stream"]
-[ext_resource type="PackedScene" uid="uid://djaglrmoukgbf" path="res://interludes/intro-0.tscn" id="4_w2q2b"]
 [ext_resource type="PackedScene" uid="uid://b5h1bbfa1qsus" path="res://interludes/outro-0.tscn" id="5_f811g"]
 [ext_resource type="PackedScene" uid="uid://dj1ufnvowa6p6" path="res://prefabs/marker.tscn" id="5_marker"]
 
@@ -20,7 +19,6 @@ data = {
 }
 script = ExtResource("2_level")
 Pretext = ExtResource("3_p8yh6")
-Intro = ExtResource("4_w2q2b")
 Outro = ExtResource("5_f811g")
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 

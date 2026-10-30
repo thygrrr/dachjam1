@@ -107,5 +107,5 @@ anti_aliasing/quality/msaa_3d=2
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 anti_aliasing/quality/use_debanding=true
 global_illumination/sdfgi/probe_ray_count=4
-environment/defaults/default_environment="uid://dnwg1c50c6neh"
 environment/defaults/default_clear_color=Color(0.21176471, 0.23921569, 0.28627452, 1)
+environment/defaults/default_environment="uid://dnwg1c50c6neh"

@@ -6,6 +6,7 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_el8uv")]
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
-text = "die Stadt
-schweigt..."
+text = "Ich schritt
+aus der 
+Stille...."
 label_settings = ExtResource("2_h4akw")

@@ -5,3 +5,5 @@
 [resource]
 font = ExtResource("1_lkkli")
 font_size = 72
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)

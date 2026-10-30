@@ -64,6 +64,7 @@ text = "grau.exe"
 label_settings = ExtResource("13_7dpha")
 
 [node name="quote-author" type="Label" parent="quote" unique_id=1291853461]
+modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 text = "R. L. Stevenson"
 label_settings = SubResource("LabelSettings_7jktm")
