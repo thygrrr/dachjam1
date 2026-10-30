@@ -14,8 +14,8 @@ config/name="[grau.exe]"
 config/tags=PackedStringArray("game")
 run/main_scene="uid://eealw1l00qul"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
-config/icon="res://icon.svg"
 boot_splash/bg_color=Color(0.21176471, 0.23921569, 0.28627452, 1)
+config/icon="res://icon.svg"
 
 [autoload]
 

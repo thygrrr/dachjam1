@@ -2,14 +2,14 @@
 
 [resource]
 ambient_light_source = 2
-ambient_light_color = Color(0.392157, 0.431373, 0.501961, 1)
+ambient_light_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 ambient_light_energy = 0.5
 tonemap_mode = 4
+tonemap_agx_contrast = 1.0
 ssil_enabled = true
-ssil_radius = 8.0
-ssil_intensity = 5.0
-ssil_sharpness = 0.8
-ssil_normal_rejection = 0.5
+ssil_intensity = 10.0
+ssil_sharpness = 0.7
+ssil_normal_rejection = 0.8
 sdfgi_use_occlusion = true
 sdfgi_read_sky_light = false
 sdfgi_min_cell_size = 0.01953125
@@ -19,7 +19,12 @@ glow_enabled = true
 glow_strength = 0.8
 glow_bloom = 0.2
 glow_hdr_threshold = 0.7
-volumetric_fog_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
+fog_sky_affect = 0.5
+fog_height = 7.0
+fog_height_density = 0.15
 volumetric_fog_density = 1.0
 volumetric_fog_albedo = Color(0.246314, 0.275395, 0.327805, 1)
 volumetric_fog_emission = Color(0.246314, 0.275395, 0.327805, 1)
+volumetric_fog_temporal_reprojection_enabled = false

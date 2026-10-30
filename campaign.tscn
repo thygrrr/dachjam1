@@ -23,6 +23,7 @@ shader_parameter/inner_radius = 0.5
 shader_parameter/outer_radius = 1.0
 shader_parameter/vignette_strength = 1.0
 shader_parameter/dither_strength = 0.03
+shader_parameter/squareness = 4.0
 shader_parameter/vignette_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 
 [node name="Node3D" type="Node3D" unique_id=971528840]
@@ -67,7 +68,7 @@ outline_size = 2
 
 [node name="Campaign" type="Node3D" parent="." unique_id=1088291254 node_paths=PackedStringArray("CameraRig", "Focus", "World", "Stage")]
 script = ExtResource("5_a8qaw")
-Levels = [ExtResource("6_14cdb"), ExtResource("7_5bbjr"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa")]
+Levels = [ExtResource("7_5bbjr"), ExtResource("6_14cdb"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa")]
 CameraRig = NodePath("../Camera Rig")
 Focus = NodePath("../Focus")
 World = NodePath("../WorldEnvironment")
