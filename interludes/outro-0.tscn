@@ -6,5 +6,6 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_ccx8q")]
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
-text = "irgendwann erobert sie die Stadt"
+text = "wo sie geht,
+wird es hell."
 label_settings = ExtResource("2_0pjrp")

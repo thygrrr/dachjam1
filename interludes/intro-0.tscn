@@ -6,5 +6,7 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_jcml1")]
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
-text = "eine Idee erleuchtet erst wenige..."
+text = "bis eine
+nicht mehr
+schweigt..."
 label_settings = ExtResource("2_2m3ip")

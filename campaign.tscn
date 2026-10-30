@@ -68,7 +68,7 @@ outline_size = 2
 
 [node name="Campaign" type="Node3D" parent="." unique_id=1088291254 node_paths=PackedStringArray("CameraRig", "Focus", "World", "Stage")]
 script = ExtResource("5_a8qaw")
-Levels = [ExtResource("7_5bbjr"), ExtResource("6_14cdb"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa")]
+Levels = [ExtResource("6_14cdb"), ExtResource("7_5bbjr"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa")]
 CameraRig = NodePath("../Camera Rig")
 Focus = NodePath("../Focus")
 World = NodePath("../WorldEnvironment")

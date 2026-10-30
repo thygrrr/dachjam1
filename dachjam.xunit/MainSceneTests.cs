@@ -28,7 +28,7 @@ public sealed class MainSceneTests : IDisposable
     public MainSceneTests(HeadlessFixture godot)
     {
         _godot = godot;
-        using var scene = GD.Load<PackedScene>((string) ProjectSettings.GetSetting("application/run/main_scene"));
+        using var scene = GD.Load<PackedScene>("res://campaign.tscn");
         _root = scene.Instantiate();
         _root.GetNode<Campaign>("Campaign").FogTime = 0.01;
         godot.Tree.Root.AddChild(_root);
@@ -57,7 +57,20 @@ public sealed class MainSceneTests : IDisposable
         Input.ParseInputEvent(new InputEventAction { Action = action, Pressed = false });
     }
 
-    private void Unlocked() => Assert.True(FramesUntil(() => !Level.Locked), "The level stayed locked.");
+    private static void PressKey(Key key)
+    {
+        Input.ParseInputEvent(new InputEventKey { PhysicalKeycode = key, Pressed = true });
+        Input.ParseInputEvent(new InputEventKey { PhysicalKeycode = key, Pressed = false });
+    }
+
+    // Skips the interludes on the way, as a player would with Space.
+    private bool SkippingUntil(Func<bool> condition) => FramesUntil(() =>
+    {
+        if (Stage.GetChildCount() > 0) PressKey(Key.Space);
+        return condition();
+    });
+
+    private void Unlocked() => Assert.True(SkippingUntil(() => !Level.Locked), "The level stayed locked.");
 
     private void SolveLevel0()
     {
@@ -199,21 +212,67 @@ public sealed class MainSceneTests : IDisposable
 
         SolveLevel0();
 
-        Assert.True(FramesUntil(() => Campaign.Index == 1));
+        Assert.True(SkippingUntil(() => Campaign.Index == 1));
         Assert.Equal(2, Level.Puzzle.Trails.Count);
         Assert.Equal(_entitiesBefore + Level1Cells * PerCell, ECS.World.Count);
     }
 
     [Fact]
+    public void Arm_RisesFromRestToStraightAbove()
+    {
+        var rest = new Vector3(-5, 6, 1);
+
+        Assert.True(jam.Campaign.Arm(rest, 12, 0).IsEqualApprox(rest));
+        Assert.True(jam.Campaign.Arm(rest, 12, 1).IsEqualApprox(new Vector3(0, 12, 0)));
+
+        var halfway = jam.Campaign.Arm(rest, 12, 0.5f);
+        Assert.True(new Vector2(halfway.X, halfway.Z).Normalized().IsEqualApprox(new Vector2(-5, 1).Normalized()));
+        Assert.True(halfway.Y > rest.Y);
+    }
+
+    [Fact]
+    public void SolvedLevel_RaisesTheCameraAboveTheBoard()
+    {
+        Campaign.OverviewTime = 0.01;
+        var camera = _godot.Tree.Root.GetViewport().GetCamera3D();
+
+        SolveLevel0();
+
+        Assert.True(SkippingUntil(() => Mathf.IsEqualApprox(Campaign.Overview, 1)), "The camera never rose.");
+        Frames(2);
+        var above = camera.GlobalPosition - Level.Center;
+        Assert.True(new Vector2(above.X, above.Z).Length() < 1.5f, $"The camera is not above the board: {above}.");
+        Assert.True(above.Y > 8);
+    }
+
+    [Fact]
     public void Fog_ClearsForPlay_WithoutChangingTheEnvironmentResource()
     {
-        Assert.Equal(GD.Load<Godot.Environment>(WorldEnvironment).VolumetricFogDensity, Campaign.ThickFog);
-        Assert.Equal(Campaign.ThickFog, Fog.VolumetricFogDensity);
+        var resource = GD.Load<Godot.Environment>(WorldEnvironment);
+        Assert.Equal(resource.FogDensity, Campaign.PlayFog);
+        Assert.Equal(Campaign.ThickFog, Fog.FogDensity);
 
         Unlocked();
 
-        Assert.Equal(Campaign.PlayFog, Fog.VolumetricFogDensity, 0.001f);
-        Assert.Equal(Campaign.ThickFog, GD.Load<Godot.Environment>(WorldEnvironment).VolumetricFogDensity);
+        Assert.Equal(Campaign.PlayFog, Fog.FogDensity, 0.001f);
+        Assert.Equal(Campaign.PlayFog, GD.Load<Godot.Environment>(WorldEnvironment).FogDensity);
+    }
+
+    [Fact]
+    public void ThickFog_HidesTheBoard()
+    {
+        var distance = Level.Center.DistanceTo(_godot.Tree.Root.GetViewport().GetCamera3D().GlobalPosition);
+
+        Assert.True(jam.Campaign.FogAmount(Campaign.ThickFog, distance) > 0.999f);
+        Assert.True(jam.Campaign.FogAmount(Campaign.PlayFog, distance) < 0.5f);
+    }
+
+    [Fact]
+    public void FogDensity_InvertsFogAmount()
+    {
+        Assert.Equal(0.01f, jam.Campaign.FogDensity(jam.Campaign.FogAmount(0.01f, 8), 8), 0.0001f);
+        Assert.Equal(1f, jam.Campaign.FogDensity(jam.Campaign.FogAmount(1f, 8), 8), 0.001f);
+        Assert.True(float.IsFinite(jam.Campaign.FogDensity(jam.Campaign.FogAmount(100f, 8), 8)));
     }
 
     [Fact]
@@ -234,27 +293,6 @@ public sealed class MainSceneTests : IDisposable
     }
 
     [Fact]
-    public void Fog_FallsBackToClassicFog_WithoutVolumetricFog()
-    {
-        var resource = GD.Load<Godot.Environment>(WorldEnvironment);
-        var environment = (Godot.Environment) resource.Duplicate();
-
-        Assert.True(jam.Campaign.TuneFog(environment, "forward_plus"));
-        Assert.True(environment.VolumetricFogEnabled);
-        Assert.False(environment.FogEnabled);
-
-        Assert.False(jam.Campaign.TuneFog(environment, "mobile"));
-        Assert.False(environment.VolumetricFogEnabled);
-        Assert.True(environment.FogEnabled);
-        Assert.Equal(resource.VolumetricFogAlbedo, environment.FogLightColor);
-        Assert.Equal(jam.Campaign.FallbackFogHeight, environment.FogHeight);
-
-        jam.Campaign.SetFogDensity(environment, false, Campaign.PlayFog);
-        Assert.Equal(Campaign.PlayFog * jam.Campaign.FallbackFogDensityScale, environment.FogDensity, 0.0001f);
-        Assert.True(resource.VolumetricFogEnabled);
-    }
-
-    [Fact]
     public void Interludes_SandwichEachLevel()
     {
         Campaign.AdvanceDelay = 0.01;
@@ -263,11 +301,11 @@ public sealed class MainSceneTests : IDisposable
 
         var pretext = Showing("Pretext");
         Frames(5);
-        Assert.Equal(Campaign.ThickFog, Fog.VolumetricFogDensity);
+        Assert.Equal(Campaign.ThickFog, Fog.FogDensity);
         pretext.QueueFree();
 
         var intro = Showing("Intro");
-        Assert.Equal(Campaign.PlayFog, Fog.VolumetricFogDensity, 0.001f);
+        Assert.Equal(Campaign.PlayFog, Fog.FogDensity, 0.001f);
         Assert.True(Level.Locked);
         intro.QueueFree();
 
@@ -275,12 +313,12 @@ public sealed class MainSceneTests : IDisposable
         SolveLevel0();
 
         var outro = Showing("Outro");
-        Assert.Equal(Campaign.PlayFog, Fog.VolumetricFogDensity, 0.001f);
+        Assert.Equal(Campaign.PlayFog, Fog.FogDensity, 0.001f);
         outro.QueueFree();
 
         Showing("Pretext");
         Assert.Equal(1, Campaign.Index);
-        Assert.Equal(Campaign.ThickFog, Fog.VolumetricFogDensity);
+        Assert.Equal(Campaign.ThickFog, Fog.FogDensity);
     }
 
     [Fact]
@@ -295,19 +333,116 @@ public sealed class MainSceneTests : IDisposable
         Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(interlude)));
     }
 
-    [Fact]
-    public void Tab_SelectsTheNextStream()
+    [Theory]
+    [InlineData(Key.Tab)]
+    [InlineData(Key.Space)]
+    [InlineData(Key.Enter)]
+    [InlineData(Key.KpEnter)]
+    public void NextStreamKeys_SelectTheNextStream(Key key)
     {
         Campaign.Load(1);
         var teal = Level.GetNode<Protesters>("Teal");
         Unlocked();
 
-        Press("ui_focus_next");
+        PressKey(key);
         Frames(2);
 
         Assert.Same(teal.Head, Level.SelectedHead);
         Assert.True(teal.Selected);
         Assert.False(Orange.Selected);
+    }
+
+    [Fact]
+    public void Space_SkipsAnInterlude()
+    {
+        var interlude = GD.Load<PackedScene>("res://interludes/interlude.tscn").Instantiate();
+        interlude.Set("hold", 60);
+        _godot.Tree.Root.AddChild(interlude);
+        Frames(2);
+
+        PressKey(Key.Space);
+
+        Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(interlude)));
+    }
+
+    [Fact]
+    public void Intro_TypesTheTitleAndFreesItself()
+    {
+        var intro = GD.Load<PackedScene>("res://intro.tscn").Instantiate<Control>();
+        intro.Set("fade", 0.01);
+        intro.Set("hold", 0.01);
+        intro.Set("author_delay", 0.01);
+        intro.Set("linger", 0.01);
+        intro.Set("typing", new[] { 0.01f });
+        intro.Set("title_hold", 0.01);
+        var exe = intro.GetNode<Label>("quote/quote-full/quote-exe");
+        _godot.Tree.Root.AddChild(intro);
+
+        Assert.True(FramesUntil(() => exe.VisibleCharacters == exe.Text.Length), "The title was never typed.");
+        Assert.Equal(1, exe.SelfModulate.A);
+        Assert.Equal(0, intro.GetNode<Label>("quote/quote-full").SelfModulate.A);
+        Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(intro)));
+    }
+
+    [Theory]
+    [InlineData(800, 800)]
+    [InlineData(400, 800)]
+    [InlineData(1600, 900)]
+    public void Intro_PutsTheTitleOnTheQuotesGrau(int width, int height)
+    {
+        var intro = GD.Load<PackedScene>("res://intro.tscn").Instantiate<Control>();
+        intro.Set("fade", 60);
+        var full = intro.GetNode<Label>("quote/quote-full");
+        var exe = intro.GetNode<Label>("quote/quote-full/quote-exe");
+        var window = new SubViewport { Size = new Vector2I(width, height) };
+        _godot.Tree.Root.AddChild(window);
+        window.AddChild(intro);
+        Frames(3);
+
+        var grau = full.GetCharacterBounds(full.Text.IndexOf("grau"));
+        var title = exe.GetCharacterBounds(0);
+
+        Assert.True(grau.HasArea(), "The quote has no grau.");
+        Assert.True((exe.Position + title.Position).IsEqualApprox(grau.Position), $"{exe.Position + title.Position} != {grau.Position}");
+        Assert.Equal(grau.Size, title.Size);
+        window.Free();
+    }
+
+    [Fact]
+    public void OpeningScreen_IsTheSameGreyAsTheSplash()
+    {
+        Assert.Equal(ProjectSettings.GetSetting("application/boot_splash/bg_color"),
+            ProjectSettings.GetSetting("rendering/environment/defaults/default_clear_color"));
+    }
+
+    [Theory]
+    [InlineData("res://interludes/pretext-0.tscn")]
+    [InlineData("res://interludes/intro-0.tscn")]
+    [InlineData("res://interludes/outro-0.tscn")]
+    public void Level0Quotes_BreakOnlyWhereWritten(string path)
+    {
+        var interlude = GD.Load<PackedScene>(path).Instantiate<Control>();
+        interlude.Set("fade", 60);
+        var quote = interlude.GetNode<Label>("Quote");
+        var window = new SubViewport { Size = new Vector2I(800, 800) };
+        _godot.Tree.Root.AddChild(window);
+        window.AddChild(interlude);
+        Frames(2);
+
+        Assert.Equal(quote.Text.Split('\n').Length, quote.GetLineCount());
+        window.Free();
+    }
+
+    [Fact]
+    public void Space_SkipsTheIntro()
+    {
+        var intro = GD.Load<PackedScene>("res://intro.tscn").Instantiate();
+        _godot.Tree.Root.AddChild(intro);
+        Frames(2);
+
+        PressKey(Key.Space);
+
+        Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(intro)));
     }
 
     [Fact]

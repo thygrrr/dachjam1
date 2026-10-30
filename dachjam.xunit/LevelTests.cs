@@ -10,7 +10,7 @@ public class LevelTests(HeadlessFixture godot)
 {
     private static PackedScene[] CampaignLevels()
     {
-        using var scene = GD.Load<PackedScene>((string) ProjectSettings.GetSetting("application/run/main_scene"));
+        using var scene = GD.Load<PackedScene>("res://campaign.tscn");
         var root = scene.Instantiate();
         try { return root.GetNode<Campaign>("Campaign").Levels; }
         finally { root.Free(); }

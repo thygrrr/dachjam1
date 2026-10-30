@@ -7,7 +7,7 @@ namespace jam;
 
 /// <summary>
 ///     A puzzle level. The empty GridMap cells reachable from the streams' starts form the board, and the streams must
-///     cover all of it. Arrow keys steer the selected stream, Tab selects the next one, and R restarts.
+///     cover all of it. Arrow keys steer the selected stream, Tab, Space or Enter selects the next one, and R restarts.
 ///     Expects a <see cref="Passives"/> child and one or more <see cref="Protesters"/> children.
 ///     Its interludes are played around it by the <see cref="Campaign"/>.
 /// </summary>
@@ -22,6 +22,12 @@ public partial class Level : GridMap
     ///     Global center of the board's bounding box.
     /// </summary>
     public Godot.Vector3 Center { get; private set; }
+
+    /// <summary>
+    ///     Half the horizontal diagonal of the board's bounding box, cells included: the board fits in a circle this wide
+    ///     around <see cref="Center"/>, however it is turned.
+    /// </summary>
+    public float Radius { get; private set; }
 
     public Node3D SelectedHead => _streams[_selected].Head;
 
@@ -64,6 +70,8 @@ public partial class Level : GridMap
         var min = new Vector3I(board.Cells.Min(cell => cell.X), 0, board.Cells.Min(cell => cell.Z));
         var max = new Vector3I(board.Cells.Max(cell => cell.X), 0, board.Cells.Max(cell => cell.Z));
         Center = ToGlobal((MapToLocal(min) + MapToLocal(max)) / 2);
+        var span = MapToLocal(max) - MapToLocal(min) + CellSize;
+        Radius = new Vector2(span.X, span.Z).Length() / 2;
 
         var capacity = _passives.Populate(board.Cells, cell => MapToLocal(cell).ToNumerics());
         foreach (var renderer in GetChildren().OfType<CitizenRenderer>()) renderer.Allocate(capacity, bounds);
@@ -76,7 +84,7 @@ public partial class Level : GridMap
     {
         if (Locked || Puzzle.IsSolved) return;
 
-        if (ev.IsActionPressed("ui_focus_next")) Select(_selected + 1);
+        if (ev.IsActionPressed("next_stream")) Select(_selected + 1);
         else if (ev.IsActionPressed("restart")) Restart();
         else if (Steering(ev) is { } direction) Step(_selected, direction);
         else return;
