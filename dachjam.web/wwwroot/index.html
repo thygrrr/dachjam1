@@ -228,8 +228,11 @@
     </script>
     <script src="godot.js"></script>
     <script>
+        const renderTest = new URLSearchParams(location.search).get('render-test');
+        const renderArgs = ['no-msaa', 'unshaded'].includes(renderTest) ? ['--', `--render-test=${renderTest}`] : [];
+        if (renderTest === 'mobile') renderArgs.push('--rendering-method', 'mobile');
         const GODOT_CONFIG = {
-            'args': [],
+            'args': renderArgs,
             'canvasResizePolicy': 0,
             'ensureCrossOriginIsolationHeaders': false,
             'executable': 'godot',

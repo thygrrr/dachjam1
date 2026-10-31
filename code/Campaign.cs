@@ -133,6 +133,13 @@ public partial class Campaign : Node3D
 
         CameraRig.GlobalPosition = Rig();
         Focus.GlobalPosition = Current.SelectedHead.GlobalPosition;
+        if (OS.HasFeature("web"))
+        {
+            var camera = GetViewport().GetCamera3D();
+            GD.Print($"Level {index}: camera={camera.GlobalPosition}, focus={Focus.GlobalPosition}, " +
+                     $"fov={camera.Fov}, near={camera.Near}, far={camera.Far}, " +
+                     $"renderer={RenderingServer.GetCurrentRenderingMethod()}");
+        }
         Run(Current);
     }
 

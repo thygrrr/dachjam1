@@ -32,3 +32,5 @@ func _process(delta: float) -> void:
 	# world up still levels the view whenever it is not looking straight down.
 	var up := (Vector3.UP + global_basis.y.normalized()).normalized()
 	global_transform = global_transform.looking_at(target_position + aim_pos, up)
+	if OS.has_feature("web") and time == delta:
+		print("Camera aim: position=", global_position, ", forward=", -global_basis.z, ", target=", target_position + aim_pos)

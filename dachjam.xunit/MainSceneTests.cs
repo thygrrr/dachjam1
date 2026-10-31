@@ -231,6 +231,21 @@ public sealed class MainSceneTests : IDisposable
     }
 
     [Fact]
+    public void Camera_StaysAboveTheBuildingsAndFacesTheSelectedStream()
+    {
+        var camera = _godot.Tree.Root.GetViewport().GetCamera3D();
+        for (var index = 0; index < Campaign.Levels.Length; index++)
+        {
+            Campaign.Load(index);
+            Frames(2);
+
+            Assert.True(camera.GlobalPosition.IsFinite(), $"Level {index}: {camera.GlobalPosition}");
+            Assert.True(camera.GlobalPosition.Y > Level.Center.Y + 4, $"Level {index}: {camera.GlobalPosition}");
+            Assert.False(camera.IsPositionBehind(Level.SelectedHead.GlobalPosition), $"Level {index}");
+        }
+    }
+
+    [Fact]
     public void SolvedLevel_RaisesTheCameraAboveTheBoard()
     {
         Campaign.OverviewTime = 0.01;
