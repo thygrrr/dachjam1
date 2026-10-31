@@ -3,7 +3,7 @@ extends Interlude
 ## behind it. Run on its own, it changes to [member next_scene] when done; as an interlude it frees itself.
 
 ## Scene to change to when the intro ran as the current scene.
-@export_file("*.tscn") var next_scene := "res://campaign.tscn"
+@export var next_scene := preload("res://campaign.tscn")
 ## Seconds between the typed quote and its author.
 @export var author_delay := 0.6
 ## Seconds the title word stands alone before the typing begins.
@@ -38,7 +38,7 @@ func align() -> void:
 
 func finish() -> void:
 	if self == get_tree().current_scene and next_scene:
-		get_tree().change_scene_to_file(next_scene)
+		get_tree().change_scene_to_packed(next_scene)
 	else:
 		queue_free()
 
