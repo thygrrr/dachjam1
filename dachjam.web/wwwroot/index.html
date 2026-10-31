@@ -69,6 +69,22 @@
             outline: none;
         }
 
+        #focus-hint {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: calc(100% - 2rem);
+            z-index: 3;
+            padding: .65rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: .5rem;
+            color: white;
+            background: var(--grau);
+            font: 14px/1.3 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+            cursor: pointer;
+        }
+
         /* Painted above #status (which JavaScript would otherwise remove) so
            the message is visible when scripts are disabled. */
         noscript {
@@ -175,9 +191,11 @@
 </head>
 
 <body>
-    <canvas id="canvas">
+    <canvas id="canvas" tabindex="0" aria-label="dachjam game">
         Your browser does not support the canvas tag.
     </canvas>
+
+    <button id="focus-hint" type="button" aria-controls="canvas" hidden>Click to resume keyboard control</button>
 
     <noscript>
         Your browser does not support JavaScript.
@@ -231,6 +249,46 @@
             let initializing = true;
             let statusMode = '';
 
+            function enableFocusRecovery() {
+                const canvas = document.getElementById('canvas');
+                const hint = document.getElementById('focus-hint');
+
+                function updateFocusHint() {
+                    // An iframe can keep its activeElement while the parent page has focus.
+                    hint.hidden = document.hidden || (document.hasFocus() && document.activeElement === canvas);
+                }
+
+                function focusCanvas() {
+                    canvas.focus({ preventScroll: true });
+                    updateFocusHint();
+                }
+
+                function restoreCanvasFocus() {
+                    // Leave HTML controls and Godot's hidden IME input alone.
+                    if (!document.hidden && document.hasFocus() &&
+                        [document.body, document.documentElement, canvas].includes(document.activeElement)) {
+                        focusCanvas();
+                    }
+                    updateFocusHint();
+                }
+
+                document.addEventListener('pointerdown', (event) => {
+                    if (event.target === document.body || event.target === document.documentElement) {
+                        // Keep the default mouse action from moving focus back to the letterbox.
+                        event.preventDefault();
+                        focusCanvas();
+                    }
+                });
+                hint.addEventListener('click', focusCanvas);
+                document.addEventListener('focusin', updateFocusHint);
+                document.addEventListener('focusout', () => queueMicrotask(updateFocusHint));
+                window.addEventListener('blur', updateFocusHint);
+                window.addEventListener('focus', restoreCanvasFocus);
+                document.addEventListener('visibilitychange', restoreCanvasFocus);
+                document.addEventListener('fullscreenchange', restoreCanvasFocus);
+                restoreCanvasFocus();
+            }
+
             function setStatusMode(mode) {
                 if (statusMode === mode || !initializing) {
                     return;
@@ -238,6 +296,7 @@
                 if (mode === 'hidden') {
                     statusOverlay.remove();
                     initializing = false;
+                    enableFocusRecovery();
                     return;
                 }
                 statusBar.style.display = mode === 'progress' ? 'block' : 'none';
