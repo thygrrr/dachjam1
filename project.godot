@@ -100,7 +100,6 @@ skip={
 [internationalization]
 
 locale/translations=PackedStringArray("res://localization/de.po", "res://localization/en.po", "res://localization/fr.po")
-locale/fallback="en"
 
 [rendering]
 
