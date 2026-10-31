@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dwoyb62ebgp0c"]
+
+[ext_resource type="AudioStream" uid="uid://bjldjolj30u7m" path="res://music/Karl Casey - White Bat 61 - 03 The Evil Has Returned.ogg" id="1_kvjbc"]
+
+[node name="Audioplayer" type="AudioStreamPlayer" unique_id=1572311695]
+stream = ExtResource("1_kvjbc")
+volume_db = -10.0
+autoplay = true
+playback_type = 2
+parameters/looping = true

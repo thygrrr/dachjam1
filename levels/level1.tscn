@@ -5,9 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://chbj7ukodnpim" path="res://prefabs/passives.tscn" id="3_passives"]
 [ext_resource type="PackedScene" uid="uid://ookpruwtpqbw" path="res://prefabs/stream.tscn" id="4_stream"]
 [ext_resource type="PackedScene" uid="uid://dj1ufnvowa6p6" path="res://prefabs/marker.tscn" id="5_marker"]
-[ext_resource type="PackedScene" path="res://interludes/pretext-1.tscn" id="pretext_1"]
-[ext_resource type="PackedScene" path="res://interludes/intro-1.tscn" id="intro_1"]
-[ext_resource type="PackedScene" path="res://interludes/outro-1.tscn" id="outro_1"]
+[ext_resource type="PackedScene" uid="uid://dbaa8v42ho2fw" path="res://interludes/intro-1.tscn" id="intro_1"]
+[ext_resource type="PackedScene" uid="uid://cjgldhfdgkcs1" path="res://interludes/outro-1.tscn" id="outro_1"]
+[ext_resource type="PackedScene" uid="uid://btu5r6ihx83cf" path="res://interludes/pretext-1.tscn" id="pretext_1"]
 
 [node name="Level" type="GridMap" unique_id=2087441248]
 mesh_library = ExtResource("1_cubes")

@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 DebugMenu="*uid://cggqb75a8w8r"
+Audioplayer="*uid://dwoyb62ebgp0c"
 
 [display]
 
