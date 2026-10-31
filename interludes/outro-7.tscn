@@ -6,6 +6,5 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_interlude")]
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
-text = "Jede Straße
-führt zu uns."
+text = "LEVEL_7_OUTRO"
 label_settings = ExtResource("2_settings")

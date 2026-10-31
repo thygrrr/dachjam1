@@ -6,6 +6,5 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_interlude")]
 
 [node name="Quote" parent="." unique_id=1625584757]
-text = "Sie sperren
-die Straßen."
+text = "LEVEL_7_PRETEXT"
 label_settings = ExtResource("2_settings")

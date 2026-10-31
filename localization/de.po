@@ -1,0 +1,138 @@
+msgid ""
+msgstr ""
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: intro.tscn
+msgid "OPENING_QUOTE"
+msgstr "Schweigen kann die grausamste Lüge sein."
+
+#: intro.tscn
+msgid "OPENING_TITLE"
+msgstr "grau.exe"
+
+#: intro.tscn
+msgid "OPENING_AUTHOR"
+msgstr "R. L. Stevenson"
+
+#: campaign.tscn
+msgid "GRAFFITI_NEW_IDEAS"
+msgstr "Ich verstehe nicht, warum Menschen neue Ideen fürchten.\nIch fürchte die alten."
+
+#: campaign.tscn
+msgid "GRAFFITI_CUBES"
+msgstr "alle Würfel sind\nschön"
+
+#: campaign.tscn
+msgid "GRAFFITI_SHARING"
+msgstr "so tilge Verteilung den Überfluss\nund jeder habe genug."
+
+#: interludes/pretext-0.tscn
+msgid "LEVEL_0_PRETEXT"
+msgstr "Ich schritt\ndurch den \nNebel..."
+
+#: interludes/pretext-1.tscn
+msgid "LEVEL_1_PRETEXT"
+msgstr "Wir sind nächtliche Schatten."
+
+#: interludes/pretext-2.tscn
+msgid "LEVEL_2_PRETEXT"
+msgstr "Sie zählen\nunsere Schritte."
+
+#: interludes/pretext-3.tscn
+msgid "LEVEL_3_PRETEXT"
+msgstr "Manche Ideen\nsind ganz ohne Ziele."
+
+#: interludes/pretext-4.tscn
+msgid "LEVEL_4_PRETEXT"
+msgstr "Unsere Vielfalt \nist unsere Stärke."
+
+#: interludes/pretext-5.tscn
+msgid "LEVEL_5_PRETEXT"
+msgstr "Füllt die\nKluften\nzwischen den\nHäusern!"
+
+#: interludes/pretext-6.tscn
+msgid "LEVEL_6_PRETEXT"
+msgstr "Das Flüstern\nverklingt."
+
+#: interludes/pretext-7.tscn
+msgid "LEVEL_7_PRETEXT"
+msgstr "Sie sperren\ndie Straßen."
+
+#: interludes/pretext-8.tscn
+msgid "LEVEL_8_PRETEXT"
+msgstr "Unser Raum ist Leben."
+
+#: interludes/intro-0.tscn
+msgid "LEVEL_0_INTRO"
+msgstr "Vorwärts.\n\n\n...in die\nMenge."
+
+#: interludes/intro-1.tscn
+msgid "LEVEL_1_INTRO"
+msgstr "Nehmt ein\nalle Wege.\nBesucht alle\nGassen!"
+
+#: interludes/intro-2.tscn
+msgid "LEVEL_2_INTRO"
+msgstr "Lasst uns\ntrotzdem\nmarschieren."
+
+#: interludes/intro-3.tscn
+msgid "LEVEL_3_INTRO"
+msgstr "Sie brauchen\nnur Raum."
+
+#: interludes/intro-5.tscn
+msgid "LEVEL_5_INTRO"
+msgstr "Sie bauen Mauern.\nWir dagegen Brücken."
+
+#: interludes/intro-6.tscn
+msgid "LEVEL_6_INTRO"
+msgstr "Ein Chor\nstimmt ein."
+
+#: interludes/intro-7.tscn
+msgid "LEVEL_7_INTRO"
+msgstr "Auf die\nBarrikaden!"
+
+#: interludes/intro-8.tscn
+msgid "LEVEL_8_INTRO"
+msgstr "Heute füllen\nwir ihn mit Farbe."
+
+#: interludes/outro-0.tscn
+msgid "LEVEL_0_OUTRO"
+msgstr "... und war\nnicht allein!"
+
+#: interludes/outro-1.tscn
+msgid "LEVEL_1_OUTRO"
+msgstr "Die Gedanken\nsind frei!"
+
+#: interludes/outro-2.tscn
+msgid "LEVEL_2_OUTRO"
+msgstr "Wir achten\neinander."
+
+#: interludes/outro-3.tscn
+msgid "LEVEL_3_OUTRO"
+msgstr "...und \nfinden ihn\nüberall."
+
+#: interludes/outro-4.tscn
+msgid "LEVEL_4_OUTRO"
+msgstr "Das Grau\nwird dünner."
+
+#: interludes/outro-5.tscn
+msgid "LEVEL_5_OUTRO"
+msgstr "Zeigt Euch!\nWehrt Euch!\nLiebt Euch!"
+
+#: interludes/outro-6.tscn
+msgid "LEVEL_6_OUTRO"
+msgstr "Eure Türme\nhören uns zu."
+
+#: interludes/outro-7.tscn
+msgid "LEVEL_7_OUTRO"
+msgstr "Jede Straße\nführt zu uns."
+
+#: interludes/outro-8.tscn
+msgid "LEVEL_8_OUTRO"
+msgstr "Die Stadt\ngehört\nuns allen."
+
+#: end.tscn
+msgid "END_CARD"
+msgstr "Danke für Deinen\nWiderstand."

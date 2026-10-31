@@ -6,8 +6,5 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_interlude")]
 
 [node name="Quote" parent="." index="2" unique_id=1625584757]
-text = "Füllt die
-Kluften
-zwischen den
-Häusern!"
+text = "LEVEL_5_PRETEXT"
 label_settings = ExtResource("2_settings")

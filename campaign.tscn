@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://levels/level6.tscn" id="level6"]
 [ext_resource type="PackedScene" path="res://levels/level7.tscn" id="level7"]
 [ext_resource type="PackedScene" path="res://levels/level8.tscn" id="level8"]
+[ext_resource type="PackedScene" path="res://end.tscn" id="end_card"]
 [ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="11_adary"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="12_v85b1"]
 
@@ -64,8 +65,7 @@ script = ExtResource("3_h3hf4")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.91841, 0.54185, 5.94647)
 visible = false
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
-text = "I can't understand why people are afraid of new ideas.
-I'm frightened of the old ones."
+text = "GRAFFITI_NEW_IDEAS"
 font = ExtResource("4_oal5e")
 font_size = 64
 outline_size = 2
@@ -73,6 +73,7 @@ outline_size = 2
 [node name="Campaign" type="Node3D" parent="." unique_id=1088291254 node_paths=PackedStringArray("CameraRig", "Focus", "World", "Stage")]
 script = ExtResource("5_a8qaw")
 Levels = [ExtResource("6_14cdb"), ExtResource("7_5bbjr"), ExtResource("8_celeg"), ExtResource("9_y72xh"), ExtResource("10_g2nxa"), ExtResource("level5"), ExtResource("level6"), ExtResource("level7"), ExtResource("level8")]
+EndCard = ExtResource("end_card")
 CameraRig = NodePath("../Camera Rig")
 Focus = NodePath("../Focus")
 World = NodePath("../WorldEnvironment")
@@ -87,8 +88,7 @@ visible = false
 [node name="Label3D2" type="Label3D" parent="graffiti" unique_id=1512755043]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0815907, 1.14185, -1.35353)
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
-text = "all cubes are
-beautiful"
+text = "GRAFFITI_CUBES"
 font = ExtResource("4_oal5e")
 font_size = 64
 outline_size = 2
@@ -96,8 +96,7 @@ outline_size = 2
 [node name="Label3D3" type="Label3D" parent="graffiti" unique_id=329581907]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.81841, 0.0418497, -4.05353)
 modulate = Color(0.392157, 0.431373, 0.501961, 1)
-text = "so distribution should undo excess
-and each man have enough."
+text = "GRAFFITI_SHARING"
 font = ExtResource("4_oal5e")
 font_size = 64
 outline_size = 2

@@ -53,19 +53,19 @@ alignment = 1
 
 [node name="quote-full" type="Label" parent="quote" unique_id=1385103255]
 layout_mode = 2
-text = "Schweigen kann die grausamste Lüge sein."
+text = "OPENING_QUOTE"
 label_settings = ExtResource("13_7dpha")
 autowrap_mode = 3
 
 [node name="quote-exe" type="Label" parent="quote/quote-full" unique_id=1255920718]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 0
-text = "grau.exe"
+text = "OPENING_TITLE"
 label_settings = ExtResource("13_7dpha")
 
 [node name="quote-author" type="Label" parent="quote" unique_id=1291853461]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
-text = "R. L. Stevenson"
+text = "OPENING_AUTHOR"
 label_settings = SubResource("LabelSettings_7jktm")
 horizontal_alignment = 2

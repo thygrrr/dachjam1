@@ -317,6 +317,38 @@ public sealed class MainSceneTests : IDisposable
         Showing("Pretext");
         Assert.Equal(1, Campaign.Index);
         Assert.Equal(Campaign.ThickFog, Fog.FogDensity);
+        Assert.False(Stage.HasNode("End"));
+    }
+
+    [Fact]
+    public void EndCard_AppearsAfterTheLastOutro_AndStaysVisible()
+    {
+        Campaign.AdvanceDelay = 0.01;
+        Campaign.Levels = [WithInterludes(Campaign.Levels[0])];
+        Campaign.Load(0);
+
+        Showing("Pretext").QueueFree();
+        var intro = Showing("Intro");
+        SolveLevel0();
+        intro.QueueFree();
+        var outro = Showing("Outro");
+        Frames(5);
+        Assert.False(Stage.HasNode("End"));
+
+        outro.QueueFree();
+        var end = Showing("End");
+        Assert.Equal("res://end.tscn", end.SceneFilePath);
+        Assert.Equal(Campaign.ThickFog, Fog.FogDensity);
+        Assert.Equal(0, Campaign.Index);
+
+        PressKey(Key.Space);
+        Frames(10);
+        Assert.True(GodotObject.IsInstanceValid(end));
+        Assert.Same(end, Stage.GetNode("End"));
+
+        Campaign.Load(0);
+        Frames(2);
+        Assert.False(Stage.HasNode("End"));
     }
 
     [Fact]
@@ -391,34 +423,56 @@ public sealed class MainSceneTests : IDisposable
         var exe = intro.GetNode<Label>("quote/quote-full/quote-exe");
         _godot.Tree.Root.AddChild(intro);
 
-        Assert.True(FramesUntil(() => exe.VisibleCharacters == exe.Text.Length), "The title was never typed.");
+        Assert.True(FramesUntil(() => exe.VisibleCharacters == exe.GetTotalCharacterCount()), "The title was never typed.");
         Assert.Equal(1, exe.SelfModulate.A);
         Assert.Equal(0, intro.GetNode<Label>("quote/quote-full").SelfModulate.A);
         Assert.True(FramesUntil(() => !GodotObject.IsInstanceValid(intro)));
     }
 
     [Theory]
-    [InlineData(800, 800)]
-    [InlineData(400, 800)]
-    [InlineData(1600, 900)]
-    public void Intro_PutsTheTitleOnTheQuotesGrau(int width, int height)
+    [InlineData(800, 800, "de")]
+    [InlineData(400, 800, "de")]
+    [InlineData(1600, 900, "de")]
+    [InlineData(800, 800, "en")]
+    [InlineData(400, 800, "en")]
+    [InlineData(1600, 900, "en")]
+    [InlineData(800, 800, "fr")]
+    [InlineData(400, 800, "fr")]
+    [InlineData(1600, 900, "fr")]
+    public void Intro_PositionsTheTitleForEachLanguage(int width, int height, string locale)
     {
-        var intro = GD.Load<PackedScene>("res://intro.tscn").Instantiate<Control>();
-        intro.Set("fade", 60);
-        var full = intro.GetNode<Label>("quote/quote-full");
-        var exe = intro.GetNode<Label>("quote/quote-full/quote-exe");
+        var previous = TranslationServer.GetLocale();
         var window = new SubViewport { Size = new Vector2I(width, height) };
-        _godot.Tree.Root.AddChild(window);
-        window.AddChild(intro);
-        Frames(3);
+        try
+        {
+            TranslationServer.SetLocale(locale);
+            var intro = GD.Load<PackedScene>("res://intro.tscn").Instantiate<Control>();
+            intro.Set("fade", 60);
+            var full = intro.GetNode<Label>("quote/quote-full");
+            var exe = intro.GetNode<Label>("quote/quote-full/quote-exe");
+            _godot.Tree.Root.AddChild(window);
+            window.AddChild(intro);
+            Frames(3);
 
-        var grau = full.GetCharacterBounds(full.Text.IndexOf("grau"));
-        var title = exe.GetCharacterBounds(0);
-
-        Assert.True(grau.HasArea(), "The quote has no grau.");
-        Assert.True((exe.Position + title.Position).IsEqualApprox(grau.Position), $"{exe.Position + title.Position} != {grau.Position}");
-        Assert.Equal(grau.Size, title.Size);
-        window.Free();
+            var titleText = exe.Tr(exe.Text).ToString();
+            var word = titleText.Split('.')[0];
+            var at = full.Tr(full.Text).ToString().IndexOf(word, StringComparison.Ordinal);
+            Assert.True(at >= 0, "The quote lost its wordplay.");
+            var anchor = full.GetCharacterBounds(at);
+            var title = exe.GetCharacterBounds(0);
+            Assert.True(anchor.HasArea(), "The quote has no title word.");
+            Assert.True((exe.Position + title.Position).IsEqualApprox(anchor.Position));
+            Assert.Equal(anchor.Size, title.Size);
+            Assert.Equal(locale switch { "fr" => "gris.exe", "en" => "grey.exe", _ => "grau.exe" }, titleText);
+            var author = intro.GetNode<Label>("quote/quote-author");
+            Assert.Equal(locale switch { "fr" => "Proverb", "en" => "Swinburne", _ => "R. L. Stevenson" },
+                author.Tr(author.Text).ToString());
+        }
+        finally
+        {
+            window.Free();
+            TranslationServer.SetLocale(previous);
+        }
     }
 
     [Fact]
@@ -442,7 +496,7 @@ public sealed class MainSceneTests : IDisposable
         window.AddChild(interlude);
         Frames(2);
 
-        Assert.Equal(quote.Text.Split('\n').Length, quote.GetLineCount());
+        Assert.Equal(quote.Tr(quote.Text).ToString().Split('\n').Length, quote.GetLineCount());
         window.Free();
     }
 

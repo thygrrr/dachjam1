@@ -6,7 +6,5 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_el8uv")]
 
 [node name="Quote" parent="." unique_id=1625584757]
-text = "Ich schritt
-durch den 
-Nebel..."
+text = "LEVEL_0_PRETEXT"
 label_settings = ExtResource("2_h4akw")

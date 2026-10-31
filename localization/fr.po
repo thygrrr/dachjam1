@@ -1,0 +1,138 @@
+msgid ""
+msgstr ""
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: intro.tscn
+msgid "OPENING_QUOTE"
+msgstr "La nuit, tous les chats sont gris."
+
+#: intro.tscn
+msgid "OPENING_TITLE"
+msgstr "gris.exe"
+
+#: intro.tscn
+msgid "OPENING_AUTHOR"
+msgstr "Proverb"
+
+#: campaign.tscn
+msgid "GRAFFITI_NEW_IDEAS"
+msgstr "Je ne comprends pas pourquoi les gens ont peur des idées nouvelles.\nCe sont les anciennes qui m'effraient."
+
+#: campaign.tscn
+msgid "GRAFFITI_CUBES"
+msgstr "tous les cubes sont\nbeaux"
+
+#: campaign.tscn
+msgid "GRAFFITI_SHARING"
+msgstr "que le partage efface le superflu\net que chacun ait assez."
+
+#: interludes/pretext-0.tscn
+msgid "LEVEL_0_PRETEXT"
+msgstr "J'avançais\ndans le\nbrouillard..."
+
+#: interludes/pretext-1.tscn
+msgid "LEVEL_1_PRETEXT"
+msgstr "Nous sommes\nles ombres\nde la nuit."
+
+#: interludes/pretext-2.tscn
+msgid "LEVEL_2_PRETEXT"
+msgstr "Ils comptent\nnos pas."
+
+#: interludes/pretext-3.tscn
+msgid "LEVEL_3_PRETEXT"
+msgstr "Certaines idées\nn'ont pas de but."
+
+#: interludes/pretext-4.tscn
+msgid "LEVEL_4_PRETEXT"
+msgstr "Notre diversité\nfait notre force."
+
+#: interludes/pretext-5.tscn
+msgid "LEVEL_5_PRETEXT"
+msgstr "Comblez\nles espaces\nentre les maisons !"
+
+#: interludes/pretext-6.tscn
+msgid "LEVEL_6_PRETEXT"
+msgstr "Les murmures\ns'éteignent."
+
+#: interludes/pretext-7.tscn
+msgid "LEVEL_7_PRETEXT"
+msgstr "Ils bloquent\nles rues."
+
+#: interludes/pretext-8.tscn
+msgid "LEVEL_8_PRETEXT"
+msgstr "Notre espace,\nc'est la vie."
+
+#: interludes/intro-0.tscn
+msgid "LEVEL_0_INTRO"
+msgstr "En avant.\n\n\n...dans la\nfoule."
+
+#: interludes/intro-1.tscn
+msgid "LEVEL_1_INTRO"
+msgstr "Empruntez\ntous les chemins.\nParcourez\ntoutes les ruelles !"
+
+#: interludes/intro-2.tscn
+msgid "LEVEL_2_INTRO"
+msgstr "Marchons\nmalgré tout."
+
+#: interludes/intro-3.tscn
+msgid "LEVEL_3_INTRO"
+msgstr "Il leur faut\njuste de l'espace."
+
+#: interludes/intro-5.tscn
+msgid "LEVEL_5_INTRO"
+msgstr "Ils bâtissent\ndes murs.\nNous, des ponts."
+
+#: interludes/intro-6.tscn
+msgid "LEVEL_6_INTRO"
+msgstr "Un chœur\ns'élève."
+
+#: interludes/intro-7.tscn
+msgid "LEVEL_7_INTRO"
+msgstr "Aux\nbarricades !"
+
+#: interludes/intro-8.tscn
+msgid "LEVEL_8_INTRO"
+msgstr "Aujourd'hui,\nnous le remplissons\nde couleurs."
+
+#: interludes/outro-0.tscn
+msgid "LEVEL_0_OUTRO"
+msgstr "... et je n'étais\npas seul !"
+
+#: interludes/outro-1.tscn
+msgid "LEVEL_1_OUTRO"
+msgstr "Les pensées\nsont libres !"
+
+#: interludes/outro-2.tscn
+msgid "LEVEL_2_OUTRO"
+msgstr "Nous nous\nrespectons."
+
+#: interludes/outro-3.tscn
+msgid "LEVEL_3_OUTRO"
+msgstr "...et en trouvent\npartout."
+
+#: interludes/outro-4.tscn
+msgid "LEVEL_4_OUTRO"
+msgstr "Le gris\ns'estompe."
+
+#: interludes/outro-5.tscn
+msgid "LEVEL_5_OUTRO"
+msgstr "Montrez-vous !\nRésistez !\nAimez-vous !"
+
+#: interludes/outro-6.tscn
+msgid "LEVEL_6_OUTRO"
+msgstr "Vos tours\nnous écoutent."
+
+#: interludes/outro-7.tscn
+msgid "LEVEL_7_OUTRO"
+msgstr "Chaque rue\nmène à nous."
+
+#: interludes/outro-8.tscn
+msgid "LEVEL_8_OUTRO"
+msgstr "La ville\nnous appartient\nà toutes et tous."
+
+#: end.tscn
+msgid "END_CARD"
+msgstr "Merci pour\nvotre résistance."

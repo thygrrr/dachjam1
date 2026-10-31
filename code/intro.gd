@@ -1,12 +1,12 @@
 extends Interlude
-## The title sequence: the quote and its author are typed, everything but its "grau" fades out again, and ".exe" is typed
+## The title sequence: the quote and its author are typed, everything but the title word fades out, and ".exe" is typed
 ## behind it. Run on its own, it changes to [member next_scene] when done; as an interlude it frees itself.
 
 ## Scene to change to when the intro ran as the current scene.
 @export_file("*.tscn") var next_scene := "res://campaign.tscn"
 ## Seconds between the typed quote and its author.
 @export var author_delay := 0.6
-## Seconds "grau" stands alone before the typing begins.
+## Seconds the title word stands alone before the typing begins.
 @export var linger := 1.0
 ## Seconds the finished title holds before it fades out.
 @export var title_hold := 2.5
@@ -18,7 +18,7 @@ extends Interlude
 ## The word quote-exe starts with, found in quote-full.
 var word: String:
 	get:
-		return quote_exe.text.substr(0, quote_exe.text.find("."))
+		return quote_exe.tr(quote_exe.text).get_slice(".", 0)
 
 
 func _ready() -> void:
@@ -27,10 +27,13 @@ func _ready() -> void:
 	super()
 
 
-## Moves quote-exe onto the word in quote-full, wherever quote-full wraps it.
+## Aligns the localized title with its word in the quote, or centers it if absent.
 func align() -> void:
-	var at := quote_full.text.find(word)
-	quote_exe.position = quote_full.get_character_bounds(at).position - quote_exe.get_character_bounds(0).position
+	var at := quote_full.tr(quote_full.text).find(word)
+	if at >= 0:
+		quote_exe.position = quote_full.get_character_bounds(at).position - quote_exe.get_character_bounds(0).position
+	else:
+		quote_exe.position = (quote_full.size - quote_exe.size) / 2
 
 
 func finish() -> void:

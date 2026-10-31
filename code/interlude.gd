@@ -71,7 +71,7 @@ func type_in(label: Label, delay := 0.0, from := 0) -> TweensGdChain:
 	label.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
 	label.visible_characters = from
 	var keys: Array[TweensGdDefinition] = []
-	for count in range(from + 1, label.text.length() + 1):
+	for count in range(from + 1, label.get_total_character_count() + 1):
 		var wait := typing[keys.size() % typing.size()]
 		if keys.is_empty():
 			wait += delay

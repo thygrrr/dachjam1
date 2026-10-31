@@ -6,9 +6,5 @@
 [node name="Interlude" unique_id=731487249 instance=ExtResource("1_interlude")]
 
 [node name="Quote" parent="." index="0" unique_id=1625584757]
-text = "Vorwärts.
-
-
-...in die
-Menge."
+text = "LEVEL_0_INTRO"
 label_settings = ExtResource("2_settings")

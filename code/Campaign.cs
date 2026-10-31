@@ -20,6 +20,7 @@ public partial class Campaign : Node3D
     private const float CameraSharpness = 3f;
 
     [Export] public PackedScene[] Levels { get; set; } = [];
+    [Export] public PackedScene EndCard { get; set; }
     [Export] public Node3D CameraRig { get; set; }
     [Export] public Node3D Focus { get; set; }
     [Export] public WorldEnvironment World { get; set; }
@@ -196,7 +197,7 @@ public partial class Campaign : Node3D
         }
     }
 
-    // After the last level, the fog stays thick.
+    // After the last level, the end card stays over the thick fog.
     private IEnumerable<Task> Sequence(Level level)
     {
         yield return Show(level.Pretext);
@@ -211,6 +212,7 @@ public partial class Campaign : Node3D
         yield return Show(level.Outro);
         yield return Fade(ThickFog);
         if (Index + 1 < Levels.Length) Load(Index + 1);
+        else Overlay(EndCard);
     }
 
     // Not awaited: the interlude plays over the level, leaving all input to it.

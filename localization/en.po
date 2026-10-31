@@ -1,0 +1,138 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: intro.tscn
+msgid "OPENING_QUOTE"
+msgstr "...the world has grown grey from thy breath."
+
+#: intro.tscn
+msgid "OPENING_TITLE"
+msgstr "grey.exe"
+
+#: intro.tscn
+msgid "OPENING_AUTHOR"
+msgstr "Swinburne"
+
+#: campaign.tscn
+msgid "GRAFFITI_NEW_IDEAS"
+msgstr "I can't understand why people are afraid of new ideas.\nI'm frightened of the old ones."
+
+#: campaign.tscn
+msgid "GRAFFITI_CUBES"
+msgstr "all cubes are\nbeautiful"
+
+#: campaign.tscn
+msgid "GRAFFITI_SHARING"
+msgstr "so distribution should undo excess\nand each man have enough."
+
+#: interludes/pretext-0.tscn
+msgid "LEVEL_0_PRETEXT"
+msgstr "I walked\nthrough the\nfog..."
+
+#: interludes/pretext-1.tscn
+msgid "LEVEL_1_PRETEXT"
+msgstr "We are shadows\nin the night."
+
+#: interludes/pretext-2.tscn
+msgid "LEVEL_2_PRETEXT"
+msgstr "They count\nour steps."
+
+#: interludes/pretext-3.tscn
+msgid "LEVEL_3_PRETEXT"
+msgstr "Some ideas\nhave no goals."
+
+#: interludes/pretext-4.tscn
+msgid "LEVEL_4_PRETEXT"
+msgstr "Our diversity\nis our strength."
+
+#: interludes/pretext-5.tscn
+msgid "LEVEL_5_PRETEXT"
+msgstr "Fill the gaps\nbetween the\nbuildings!"
+
+#: interludes/pretext-6.tscn
+msgid "LEVEL_6_PRETEXT"
+msgstr "The whispering\nfades away."
+
+#: interludes/pretext-7.tscn
+msgid "LEVEL_7_PRETEXT"
+msgstr "They block\nthe streets."
+
+#: interludes/pretext-8.tscn
+msgid "LEVEL_8_PRETEXT"
+msgstr "Our space\nis life."
+
+#: interludes/intro-0.tscn
+msgid "LEVEL_0_INTRO"
+msgstr "Forward.\n\n\n...into the\ncrowd."
+
+#: interludes/intro-1.tscn
+msgid "LEVEL_1_INTRO"
+msgstr "Take every\npath.\nExplore every\nalley!"
+
+#: interludes/intro-2.tscn
+msgid "LEVEL_2_INTRO"
+msgstr "Let us march\nall the same."
+
+#: interludes/intro-3.tscn
+msgid "LEVEL_3_INTRO"
+msgstr "They only\nneed space."
+
+#: interludes/intro-5.tscn
+msgid "LEVEL_5_INTRO"
+msgstr "They build walls.\nWe build bridges."
+
+#: interludes/intro-6.tscn
+msgid "LEVEL_6_INTRO"
+msgstr "A choir\njoins in."
+
+#: interludes/intro-7.tscn
+msgid "LEVEL_7_INTRO"
+msgstr "To the\nbarricades!"
+
+#: interludes/intro-8.tscn
+msgid "LEVEL_8_INTRO"
+msgstr "Today we fill it\nwith colour."
+
+#: interludes/outro-0.tscn
+msgid "LEVEL_0_OUTRO"
+msgstr "... and was\nnot alone!"
+
+#: interludes/outro-1.tscn
+msgid "LEVEL_1_OUTRO"
+msgstr "Thoughts\nare free!"
+
+#: interludes/outro-2.tscn
+msgid "LEVEL_2_OUTRO"
+msgstr "We respect\none another."
+
+#: interludes/outro-3.tscn
+msgid "LEVEL_3_OUTRO"
+msgstr "...and find it\neverywhere."
+
+#: interludes/outro-4.tscn
+msgid "LEVEL_4_OUTRO"
+msgstr "The grey\nis thinning."
+
+#: interludes/outro-5.tscn
+msgid "LEVEL_5_OUTRO"
+msgstr "Show yourselves!\nStand your ground!\nLove one another!"
+
+#: interludes/outro-6.tscn
+msgid "LEVEL_6_OUTRO"
+msgstr "Your towers\nhear us."
+
+#: interludes/outro-7.tscn
+msgid "LEVEL_7_OUTRO"
+msgstr "Every street\nleads to us."
+
+#: interludes/outro-8.tscn
+msgid "LEVEL_8_OUTRO"
+msgstr "The city\nbelongs\nto us all."
+
+#: end.tscn
+msgid "END_CARD"
+msgstr "Thank you\nfor resisting."
