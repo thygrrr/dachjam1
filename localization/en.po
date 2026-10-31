@@ -31,7 +31,7 @@ msgstr "so distribution should undo excess\nand each man have enough."
 
 #: interludes/pretext-0.tscn
 msgid "LEVEL_0_PRETEXT"
-msgstr "I walked\into the\nfog..."
+msgstr "I stepped\ninto the\nfog..."
 
 #: interludes/pretext-1.tscn
 msgid "LEVEL_1_PRETEXT"

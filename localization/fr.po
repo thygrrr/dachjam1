@@ -71,7 +71,7 @@ msgstr "En avant.\n\n\n...dans la\nfoule."
 
 #: interludes/intro-1.tscn
 msgid "LEVEL_1_INTRO"
-msgstr "Empruntez\ntous les chemins.\nParcourez\ntoutes les ruelles !"
+msgstr "Tous les chemins.\nToutes les ruelles !"
 
 #: interludes/intro-2.tscn
 msgid "LEVEL_2_INTRO"
@@ -99,7 +99,7 @@ msgstr "Aujourd'hui,\nnous le remplissons\nde couleurs."
 
 #: interludes/outro-0.tscn
 msgid "LEVEL_0_OUTRO"
-msgstr "...et je n'étais\npas seul !"
+msgstr "...et je n'étais\nplus seul !"
 
 #: interludes/outro-1.tscn
 msgid "LEVEL_1_OUTRO"
