@@ -15,7 +15,7 @@ msgstr "gris.exe"
 
 #: intro.tscn
 msgid "OPENING_AUTHOR"
-msgstr "Proverb"
+msgstr "proverbe"
 
 #: campaign.tscn
 msgid "GRAFFITI_NEW_IDEAS"
@@ -99,7 +99,7 @@ msgstr "Aujourd'hui,\nnous le remplissons\nde couleurs."
 
 #: interludes/outro-0.tscn
 msgid "LEVEL_0_OUTRO"
-msgstr "... et je n'étais\npas seul !"
+msgstr "...et je n'étais\npas seul !"
 
 #: interludes/outro-1.tscn
 msgid "LEVEL_1_OUTRO"

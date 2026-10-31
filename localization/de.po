@@ -99,7 +99,7 @@ msgstr "Heute füllen\nwir ihn mit Farbe."
 
 #: interludes/outro-0.tscn
 msgid "LEVEL_0_OUTRO"
-msgstr "... und war\nnicht allein!"
+msgstr "...und war\nnicht allein!"
 
 #: interludes/outro-1.tscn
 msgid "LEVEL_1_OUTRO"
