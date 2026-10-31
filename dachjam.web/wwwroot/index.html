@@ -242,6 +242,64 @@
         };
         const GODOT_THREADS_ENABLED = false;
 
+        if (renderTest === 'direct-camera') {
+            const createShaderModule = GPUDevice.prototype.createShaderModule;
+            let reported = false;
+            GPUDevice.prototype.createShaderModule = function (descriptor) {
+                if (descriptor.code.includes('@vertex') && descriptor.code.includes('var<uniform> scene_data_block')) {
+                    // shortcut: current-frame camera only; preserve previous-frame reads before making this permanent.
+                    const code = descriptor.code.replaceAll('(*(scene_data)).', 'scene_data_block.data.');
+                    if (code !== descriptor.code) {
+                        descriptor = { ...descriptor, code };
+                        if (!reported) console.log('[Camera test] Vertex shaders read camera uniforms directly.');
+                        reported = true;
+                    }
+                }
+                return createShaderModule.call(this, descriptor);
+            };
+        }
+
+        if (renderTest === 'depth' || renderTest === 'no-prepass') {
+            const seen = new Set();
+            function reportDepth(kind, state) {
+                const line = `[Depth trace] ${kind} ${JSON.stringify(state)}`;
+                if (!seen.has(line)) {
+                    seen.add(line);
+                    console.log(line);
+                }
+            }
+            for (const method of ['createRenderPipeline', 'createRenderPipelineAsync']) {
+                const create = GPUDevice.prototype[method];
+                GPUDevice.prototype[method] = function (descriptor) {
+                    if (descriptor.depthStencil) {
+                        reportDepth('pipeline', {
+                            compare: descriptor.depthStencil.depthCompare,
+                            write: descriptor.depthStencil.depthWriteEnabled,
+                            format: descriptor.depthStencil.format,
+                            samples: descriptor.multisample?.count || 1,
+                            frontFace: descriptor.primitive?.frontFace,
+                            cull: descriptor.primitive?.cullMode,
+                        });
+                    }
+                    return create.call(this, descriptor);
+                };
+            }
+            const beginRenderPass = GPUCommandEncoder.prototype.beginRenderPass;
+            GPUCommandEncoder.prototype.beginRenderPass = function (descriptor) {
+                const depth = descriptor.depthStencilAttachment;
+                if (depth) reportDepth('pass', {
+                    load: depth.depthLoadOp, store: depth.depthStoreOp, readOnly: depth.depthReadOnly,
+                    clear: depth.depthLoadOp === 'clear' ? depth.depthClearValue : undefined,
+                });
+                return beginRenderPass.call(this, descriptor);
+            };
+            const setViewport = GPURenderPassEncoder.prototype.setViewport;
+            GPURenderPassEncoder.prototype.setViewport = function (...args) {
+                reportDepth('range', { min: args[4] ?? 0, max: args[5] ?? 1 });
+                return setViewport.apply(this, args);
+            };
+        }
+
         (function () {
             performance.mark('2dog:boot');
 
@@ -417,7 +475,12 @@
                         // Newer engines also inflate .gz siblings themselves
                         // (godot.wasm.gz included); older ones ignore this key.
                         GODOT_CONFIG['precompressedSuffix'] = suffix;
-                        return new Engine(GODOT_CONFIG);
+                        const engine = new Engine(GODOT_CONFIG);
+                        if (renderTest === 'no-prepass') {
+                            // Buffer preloads are queued synchronously, before Godot reads its startup settings.
+                            engine.preloadFile(new TextEncoder().encode('[rendering]\ndriver/depth_prepass/enable=false\n'), 'override.cfg');
+                        }
+                        return engine;
                     };
                     setStatusMode('progress');
                     const started = twodogGz

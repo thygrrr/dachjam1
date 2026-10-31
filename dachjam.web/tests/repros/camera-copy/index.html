@@ -1,0 +1,112 @@
+<!doctype html><meta charset="utf-8"><title>Camera structure copy reproduction</title>
+<style>body{font:14px monospace;background:#20242b;color:#eee;padding:24px}pre{white-space:pre-wrap}</style>
+<h1>Camera structure copy reproduction</h1><p>Independent WebGPU test: no Godot runtime or game code. Run this page in Firefox and Chrome and compare the numeric results.</p><pre></pre><script>
+
+const cases = [
+  {
+    "name": "Small copied camera (glslang + Tint)",
+    "code": "//RESOURCE_USAGE\n//RESOURCE_USED:0,1\n//RESOURCE_USED:0,0\n//WEBGPU_METADATA:4,0\n//BINDING:0,1,1,0,0,4294967295,1,\n//BINDING:0,0,0,0,0,4294967295,1,\n//WEBGPU_METADATA_END\ndiagnostic(off, derivative_uniformity);\n\nstruct Result {\n  position : vec4<f32>,\n}\n\n@group(0u) @binding(1u) var<storage, read_write> result : Result;\n\nstruct Camera_2 {\n  projection : mat4x4<f32>,\n  view : mat3x4<f32>,\n  light : vec3<f32>,\n  fog : f32,\n}\n\nstruct Scene_1 {\n  camera : Camera_2,\n}\n\n@group(0u) @binding(0u) var<uniform> scene : Scene_1;\n\nstruct Camera_1 {\n  projection : mat4x4<f32>,\n  view : mat3x4<f32>,\n  light : vec3<f32>,\n  fog : f32,\n}\n\n@compute @workgroup_size(1u, 1u, 1u)\nfn main() {\n  var param : Camera_1;\n  let v = scene.camera;\n  param.projection = v.projection;\n  param.view = v.view;\n  param.light = v.light;\n  param.fog = v.fog;\n  result.position = v_1(&(param));\n}\n\nfn v_1(camera : ptr<function, Camera_1>) -> vec4<f32> {\n  var view : mat4x4<f32>;\n  let v_2 = (*(camera)).view[0i];\n  let v_3 = (*(camera)).view[1i];\n  let v_4 = (*(camera)).view[2i];\n  view = transpose(mat4x4<f32>(vec4<f32>(v_2.x, v_2.y, v_2.z, v_2.w), vec4<f32>(v_3.x, v_3.y, v_3.z, v_3.w), vec4<f32>(v_4.x, v_4.y, v_4.z, v_4.w), vec4<f32>(vec4<f32>(0.0f, 0.0f, 0.0f, 1.0f).x, vec4<f32>(0.0f, 0.0f, 0.0f, 1.0f).y, vec4<f32>(0.0f, 0.0f, 0.0f, 1.0f).z, vec4<f32>(0.0f, 0.0f, 0.0f, 1.0f).w)));\n  return (((*(camera)).projection * view) * vec4<f32>(3.0f, 2.0f, 1.0f, 1.0f));\n}\n",
+    "viewOffset": 64,
+    "expected": [
+      2,
+      -12,
+      -15,
+      1
+    ]
+  },
+  {
+    "name": "Small optimized camera (SPIRV-Tools + Tint)",
+    "code": "//RESOURCE_USAGE\n//RESOURCE_USED:0,1\n//RESOURCE_USED:0,0\n//WEBGPU_METADATA:4,0\n//BINDING:0,1,1,0,0,4294967295,1,\n//BINDING:0,0,0,0,0,4294967295,1,\n//WEBGPU_METADATA_END\ndiagnostic(off, derivative_uniformity);\n\nstruct Result {\n  position : vec4<f32>,\n}\n\n@group(0u) @binding(1u) var<storage, read_write> result : Result;\n\nstruct Camera_1 {\n  projection : mat4x4<f32>,\n  view : mat3x4<f32>,\n  light : vec3<f32>,\n  fog : f32,\n}\n\nstruct Scene_1 {\n  camera : Camera_1,\n}\n\n@group(0u) @binding(0u) var<uniform> scene : Scene_1;\n\n@compute @workgroup_size(1u, 1u, 1u)\nfn main() {\n  let v = &(scene.camera);\n  let v_1 = (*(v)).projection;\n  let v_2 = (*(v)).view;\n  result.position = ((v_1 * transpose(mat4x4<f32>(v_2[0u], v_2[1u], v_2[2u], vec4<f32>(0.0f, 0.0f, 0.0f, 1.0f)))) * vec4<f32>(3.0f, 2.0f, 1.0f, 1.0f));\n}\n",
+    "viewOffset": 64,
+    "expected": [
+      2,
+      -12,
+      -15,
+      1
+    ]
+  }
+];
+const output = document.querySelector('pre');
+function log(text) { output.textContent += text + '\n'; console.log(text); }
+function inputData(viewOffset) {
+    const data = new Float32Array(2048);
+    function camera(offset, scales, translation) {
+        data.set([scales[0],0,0,0, 0,scales[1],0,0, 0,0,scales[2],0, 0,0,0,1], offset / 4);
+        data.set([1,0,0,-translation[0], 0,1,0,-translation[1], 0,0,1,-translation[2]], (offset + viewOffset) / 4);
+    }
+    camera(0, [2,3,5], [2,6,4]);
+    camera(2848, [7,11,13], [9,8,7]);
+    return data;
+}
+function vertexSource(source) {
+    let code = source.replace(/struct Result \{[\s\S]*?\}/, '');
+    code = code.replace(/^@group\([^\n]+@binding\(1u?\)[^\n]+\n/gm, '');
+    const entry = /@compute @workgroup_size\([^\n]+\)\s*fn main\(\) \{([\s\S]*?)\n\}/;
+    const match = code.match(entry);
+    if (!match) throw Error('Compute entry point not found');
+    const body = match[1].replace('result.position =', 'let transformed =');
+    return code.replace(entry, '\nstruct VertexOutput {\n' +
+        ' @builtin(position) @invariant position: vec4<f32>,\n' +
+        ' @location(0) @interpolate(flat) transformed: vec4<f32>,\n}\n' +
+        '@vertex fn main(@builtin(vertex_index) index: u32) -> VertexOutput {\n' +
+        body + '\n let xy = vec2<f32>(f32((index << 1u) & 2u), f32(index & 2u));\n' +
+        ' return VertexOutput(vec4<f32>(xy * 2.0 - 1.0, 0.0, 1.0), transformed);\n}\n' +
+        '@fragment fn fragment(input: VertexOutput) -> @location(0) vec4<f32> {\n return input.transformed;\n}');
+}
+async function runCase(device, test, vertex) {
+    const source = vertex ? vertexSource(test.code) : test.code;
+    const module = device.createShaderModule({code: source});
+    const errors = (await module.getCompilationInfo()).messages.filter(message => message.type === 'error');
+    if (errors.length) throw Error(errors.map(message => message.message).join('\n'));
+    const uniform = device.createBuffer({size:8192, usage:GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST});
+    device.queue.writeBuffer(uniform, 0, inputData(test.viewOffset));
+    const readback = device.createBuffer({size:256, usage:GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ});
+    const encoder = device.createCommandEncoder();
+    let resource;
+    if (vertex) {
+        const pipeline = await device.createRenderPipelineAsync({layout:'auto',
+            vertex:{module, entryPoint:'main'}, fragment:{module, entryPoint:'fragment', targets:[{format:'rgba32float'}]}});
+        const group = device.createBindGroup({layout:pipeline.getBindGroupLayout(0), entries:[{binding:0, resource:{buffer:uniform}}]});
+        resource = device.createTexture({size:[1,1], format:'rgba32float', usage:GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC});
+        const pass = encoder.beginRenderPass({colorAttachments:[{view:resource.createView(), loadOp:'clear', storeOp:'store', clearValue:[999,999,999,999]}]});
+        pass.setPipeline(pipeline); pass.setBindGroup(0,group); pass.draw(3); pass.end();
+        encoder.copyTextureToBuffer({texture:resource}, {buffer:readback, bytesPerRow:256}, [1,1]);
+    } else {
+        const pipeline = await device.createComputePipelineAsync({layout:'auto', compute:{module, entryPoint:'main'}});
+        resource = device.createBuffer({size:16, usage:GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC});
+        const group = device.createBindGroup({layout:pipeline.getBindGroupLayout(0), entries:[
+            {binding:0, resource:{buffer:uniform}}, {binding:1, resource:{buffer:resource}}]});
+        const pass = encoder.beginComputePass();
+        pass.setPipeline(pipeline); pass.setBindGroup(0,group); pass.dispatchWorkgroups(1); pass.end();
+        encoder.copyBufferToBuffer(resource,0,readback,0,16);
+    }
+    device.queue.submit([encoder.finish()]);
+    await readback.mapAsync(GPUMapMode.READ);
+    const actual = [...new Float32Array(readback.getMappedRange(),0,4)];
+    readback.unmap(); readback.destroy(); uniform.destroy(); resource.destroy();
+    const passed = actual.every((value,index) => Number.isFinite(value) && Math.abs(value-test.expected[index]) < 0.001);
+    log((passed?'PASS':'FAIL') + ' ' + (vertex?'vertex':'compute') + ' ' + test.name + ': ' + JSON.stringify(actual) + ' expected ' + JSON.stringify(test.expected));
+    return passed;
+}
+async function run() {
+    log(navigator.userAgent);
+    if (!navigator.gpu) throw Error('WebGPU unavailable');
+    const adapter = await navigator.gpu.requestAdapter({powerPreference:'high-performance'});
+    if (!adapter) throw Error('No GPU adapter');
+    const info = adapter.info || {};
+    log('Adapter: ' + (info.vendor || '') + ' ' + (info.description || '') + ' ' + (info.architecture || ''));
+    const device = await adapter.requestDevice();
+    device.addEventListener('uncapturederror', event => log('GPU ERROR: '+event.error.message));
+    let passed = 0;
+    try {
+        for (const vertex of [false,true]) {
+            for (const test of cases) {
+                try { if (await runCase(device,test,vertex)) passed++; }
+                catch (error) { log('ERROR ' + (vertex?'vertex':'compute') + ' ' + test.name + ': ' + error.message); }
+            }
+        }
+        log('Result: ' + passed + '/' + (cases.length*2) + ' passed');
+    } finally { device.destroy(); }
+}
+run().catch(error => log('ERROR: '+error.message));
+</script>

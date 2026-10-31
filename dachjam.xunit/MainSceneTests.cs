@@ -246,6 +246,29 @@ public sealed class MainSceneTests : IDisposable
     }
 
     [Fact]
+    public void Camera_StaysStableAcrossLongFrames()
+    {
+        var camera = _godot.Tree.Root.GetViewport().GetCamera3D();
+        var aim = camera.GetParent<Node3D>();
+        for (var index = 0; index < Campaign.Levels.Length; index++)
+        {
+            Campaign.Load(index);
+            Frames(2);
+            foreach (var delta in new[] { 10.0, 30.0, 300.0, 1.0 / 60 })
+            {
+                Campaign._Process(delta);
+                aim.Call("_process", delta);
+
+                Assert.True(camera.GlobalPosition.IsFinite(), $"Level {index}, delta {delta}");
+                Assert.True(camera.GlobalPosition.Y > Level.Center.Y + 4, $"Level {index}, delta {delta}");
+                Assert.True(camera.GlobalBasis.IsEqualApprox(camera.GlobalBasis.Orthonormalized()));
+                Assert.Equal(1, camera.GlobalBasis.Determinant(), 4);
+                Assert.True((-camera.GlobalBasis.Z).Dot(camera.GlobalPosition.DirectionTo(Campaign.Focus.GlobalPosition)) > 0.95f);
+            }
+        }
+    }
+
+    [Fact]
     public void SolvedLevel_RaisesTheCameraAboveTheBoard()
     {
         Campaign.OverviewTime = 0.01;

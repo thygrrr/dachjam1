@@ -21,7 +21,7 @@ internal static class Program
             var renderTests = OS.GetCmdlineUserArgs();
             if (renderTests.Contains("--render-test=no-msaa")) engine.Tree.Root.Msaa3D = Viewport.Msaa.Disabled;
             if (renderTests.Contains("--render-test=unshaded")) engine.Tree.Root.DebugDraw = Viewport.DebugDrawEnum.Unshaded;
-            Console.WriteLine($"Rendering diagnostics: renderer={RenderingServer.GetCurrentRenderingMethod()}, MSAA={engine.Tree.Root.Msaa3D}, debug={engine.Tree.Root.DebugDraw}");
+            Console.WriteLine($"Rendering diagnostics: renderer={RenderingServer.GetCurrentRenderingMethod()}, MSAA={engine.Tree.Root.Msaa3D}, debug={engine.Tree.Root.DebugDraw}, prepass={ProjectSettings.GetSetting("rendering/driver/depth_prepass/enable").AsBool()}");
             GD.Print("2dog is running in the browser!");
             GD.Print("Scene Root: ", engine.Tree.CurrentScene.Name);
             // The browser loop owns the lifetime after Run() returns.
