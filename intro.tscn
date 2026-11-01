@@ -25,8 +25,16 @@ font_size = 40
 [sub_resource type="BoxMesh" id="BoxMesh_ukd63"]
 material = ExtResource("8_dpxxx")
 
-[node name="Intro" type="Control" unique_id=971528840]
-layout_mode = 3
+[node name="ColorRect" type="ColorRect" unique_id=1953772576]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.21176471, 0.23921569, 0.28627452, 1)
+
+[node name="Intro" type="Control" parent="." unique_id=971528840]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,16 +43,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_intro")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1953772576]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.21176471, 0.23921569, 0.28627452, 1)
-
-[node name="Vignette" type="ColorRect" parent="." unique_id=821453323]
+[node name="Vignette" type="ColorRect" parent="Intro" unique_id=821453323]
 material = SubResource("ShaderMaterial_vpl8t")
 layout_mode = 0
 anchor_right = 1.0
@@ -52,7 +51,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="quote" type="VBoxContainer" parent="." unique_id=1841860605]
+[node name="quote" type="VBoxContainer" parent="Intro" unique_id=1841860605]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,55 +66,55 @@ mouse_filter = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="quote-full" type="Label" parent="quote" unique_id=1385103255]
+[node name="quote-full" type="Label" parent="Intro/quote" unique_id=1385103255]
 layout_mode = 2
 text = "OPENING_QUOTE"
 label_settings = ExtResource("13_7dpha")
 autowrap_mode = 3
 
-[node name="quote-exe" type="Label" parent="quote/quote-full" unique_id=1255920718]
+[node name="quote-exe" type="Label" parent="Intro/quote/quote-full" unique_id=1255920718]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 text = "OPENING_TITLE"
 label_settings = ExtResource("13_7dpha")
 
-[node name="quote-author" type="Label" parent="quote" unique_id=1291853461]
+[node name="quote-author" type="Label" parent="Intro/quote" unique_id=1291853461]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 text = "OPENING_AUTHOR"
 label_settings = SubResource("LabelSettings_7jktm")
 horizontal_alignment = 2
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1995146592]
+[node name="Camera3D" type="Camera3D" parent="Intro" unique_id=1995146592]
 transform = Transform3D(1, 0, 5.96046e-08, -2.98023e-08, 1, -1.49012e-08, 2.98023e-08, -1.49012e-08, 1, 0, 0, 0)
 fov = 40.0
 size = 5.0
 near = 0.01
 far = 500.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1932887938]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Intro" unique_id=1932887938]
 environment = ExtResource("5_y72e6")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1110723833]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Intro" unique_id=1110723833]
 mesh = ExtResource("6_y6ycx")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1326067204]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Intro" unique_id=1326067204]
 mesh = ExtResource("7_dpxxx")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=721867360]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Intro" unique_id=721867360]
 mesh = SubResource("BoxMesh_ukd63")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=1791904054]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Intro" unique_id=1791904054]
 mesh = SubResource("BoxMesh_ukd63")
 
-[node name="FillLight" type="DirectionalLight3D" parent="." unique_id=1078030414]
+[node name="FillLight" type="DirectionalLight3D" parent="Intro" unique_id=1078030414]
 transform = Transform3D(0.612373, -0.5, -0.612372, 0.353553, 0.866025, -0.353553, 0.707107, 1.29807e-07, 0.707107, 0, 0, 5)
 light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
 light_energy = 0.2
 light_negative = true
 light_specular = 3.0
 
-[node name="FillLight2" type="DirectionalLight3D" parent="." unique_id=1389940370]
+[node name="FillLight2" type="DirectionalLight3D" parent="Intro" unique_id=1389940370]
 transform = Transform3D(0.55199, 0.545084, 0.631024, 0.72694, -0.685296, -0.0439271, 0.408494, 0.482963, -0.774518, 0, 0, 5)
 light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
 light_energy = 0.2

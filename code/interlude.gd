@@ -43,6 +43,7 @@ func skip() -> void:
 
 ## Called once the interlude has played or was skipped. Frees it by default.
 func finish() -> void:
+	print("finish")
 	queue_free()
 
 

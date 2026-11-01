@@ -1,6 +1,7 @@
 [gd_resource type="Environment" format=3 uid="uid://dnwg1c50c6neh"]
 
 [resource]
+background_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 ambient_light_energy = 0.5

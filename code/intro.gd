@@ -37,7 +37,9 @@ func align() -> void:
 
 
 func finish() -> void:
-	if self == get_tree().current_scene and next_scene:
+	# The intro sits under the scene's root (a ColorRect backdrop), so check its owner too.
+	var scene := get_tree().current_scene
+	if next_scene and (self == scene or owner == scene):
 		get_tree().change_scene_to_packed(next_scene)
 	else:
 		queue_free()
