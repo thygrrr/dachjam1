@@ -15,7 +15,7 @@ msgstr "grey.exe"
 
 #: intro.tscn
 msgid "OPENING_AUTHOR"
-msgstr "Swinburne"
+msgstr "A. C. Swinburne"
 
 #: campaign.tscn
 msgid "GRAFFITI_NEW_IDEAS"

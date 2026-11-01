@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://cs8ds3t41537e" path="res://code/intro.gd" id="1_intro"]
 [ext_resource type="FontFile" uid="uid://cgefhc807lybu" path="res://fonts/Terminal_Square/Bold/terminal-square-bold.ttf" id="3_0a7ni"]
+[ext_resource type="Environment" uid="uid://dnwg1c50c6neh" path="res://environment/env_world.tres" id="5_y72e6"]
+[ext_resource type="BoxMesh" uid="uid://oijyh80j6rhs" path="res://environment/mat_glow.tres" id="6_y6ycx"]
+[ext_resource type="BoxMesh" uid="uid://b51dma78unuwa" path="res://environment/mat_gold.tres" id="7_dpxxx"]
+[ext_resource type="Material" uid="uid://df4yvkyt8balj" path="res://environment/mat_grey.tres" id="8_dpxxx"]
 [ext_resource type="Shader" uid="uid://bvvjymmu1kdnu" path="res://shaders/vignette.gdshader" id="12_nt247"]
 [ext_resource type="LabelSettings" uid="uid://bpr50gc8rlreu" path="res://fonts/intro.labelsettings.tres" id="13_7dpha"]
 
@@ -12,11 +16,14 @@ shader_parameter/outer_radius = 1.0
 shader_parameter/vignette_strength = 1.0
 shader_parameter/dither_strength = 0.03
 shader_parameter/squareness = 4.0
-shader_parameter/vignette_color = Color(0.21360692, 0.23830244, 0.2877062, 1)
+shader_parameter/vignette_color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_7jktm"]
 font = ExtResource("3_0a7ni")
 font_size = 40
+
+[sub_resource type="BoxMesh" id="BoxMesh_ukd63"]
+material = ExtResource("8_dpxxx")
 
 [node name="Intro" type="Control" unique_id=971528840]
 layout_mode = 3
@@ -27,6 +34,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_intro")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1953772576]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.21176471, 0.23921569, 0.28627452, 1)
 
 [node name="Vignette" type="ColorRect" parent="." unique_id=821453323]
 material = SubResource("ShaderMaterial_vpl8t")
@@ -69,3 +85,39 @@ layout_mode = 2
 text = "OPENING_AUTHOR"
 label_settings = SubResource("LabelSettings_7jktm")
 horizontal_alignment = 2
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1995146592]
+transform = Transform3D(1, 0, 5.96046e-08, -2.98023e-08, 1, -1.49012e-08, 2.98023e-08, -1.49012e-08, 1, 0, 0, 0)
+fov = 40.0
+size = 5.0
+near = 0.01
+far = 500.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1932887938]
+environment = ExtResource("5_y72e6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1110723833]
+mesh = ExtResource("6_y6ycx")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1326067204]
+mesh = ExtResource("7_dpxxx")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=721867360]
+mesh = SubResource("BoxMesh_ukd63")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=1791904054]
+mesh = SubResource("BoxMesh_ukd63")
+
+[node name="FillLight" type="DirectionalLight3D" parent="." unique_id=1078030414]
+transform = Transform3D(0.612373, -0.5, -0.612372, 0.353553, 0.866025, -0.353553, 0.707107, 1.29807e-07, 0.707107, 0, 0, 5)
+light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
+light_energy = 0.2
+light_negative = true
+light_specular = 3.0
+
+[node name="FillLight2" type="DirectionalLight3D" parent="." unique_id=1389940370]
+transform = Transform3D(0.55199, 0.545084, 0.631024, 0.72694, -0.685296, -0.0439271, 0.408494, 0.482963, -0.774518, 0, 0, 5)
+light_color = Color(0.69796, 0.381985, 3.85046e-07, 1)
+light_energy = 0.2
+light_negative = true
+light_specular = 3.0
