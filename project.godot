@@ -30,6 +30,7 @@ window/size/viewport_height=800
 window/size/initial_position_type=3
 window/size/extend_to_title=true
 window/stretch/mode="canvas_items"
+window/vsync/vsync_mode=3
 
 [dotnet]
 

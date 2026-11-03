@@ -21,7 +21,7 @@ internal static class Program
         Console.WriteLine("Close the window to quit.");
 
         // Iteration() returns true when Godot wants to quit.
-        while (!engine.Iteration())
+        while (engine.Update())
         {
             // Your per-frame logic here
         }

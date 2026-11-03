@@ -32,7 +32,7 @@ func load(choice: int) -> void:
 		prints("Loading level", choice)
 		current_index = choice
 		if current:
-			current.queue_free()
+			current.queue_free.call_deferred()
 			current = null
 		current = levels[choice].instantiate()
 		get_tree().root.add_child(current)

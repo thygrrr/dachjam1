@@ -40,9 +40,9 @@ func finish() -> void:
 	# The intro sits under the scene's root (a ColorRect backdrop), so check its owner too.
 	var scene := get_tree().current_scene
 	if next_scene and (self == scene or owner == scene):
-		get_tree().change_scene_to_packed(next_scene)
+		get_tree().change_scene_to_packed.call_deferred(next_scene)
 	else:
-		queue_free()
+		queue_free.call_deferred()
 
 
 # Labels fade with self_modulate, so quote-full fades without quote-exe.
